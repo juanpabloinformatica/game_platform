@@ -22,6 +22,8 @@ Project that will consist in differentes multiplayer games
 - Database mysql
 
 ### Design
-[design](https://drive.google.com/file/d/1v26kDlXHC8ymSVP9U0YCWqmtaixvkuXy/view?usp=drive_link){target="\blank"}
+[Static design](https://drive.google.com/file/d/1v26kDlXHC8ymSVP9U0YCWqmtaixvkuXy/view?usp=drive_link){target="\blank"}
+
+[Dinamic design](https://excalidraw.com/#json=A66Kyzo_Nk71EZg5aRiRK,geO4Ihkatm1aEXfKapblow)
 
 
