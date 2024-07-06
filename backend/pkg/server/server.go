@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
+
+	"github.com/juanpabloinformatica/game_platform/pkg/game"
 )
 
 type Client struct {
@@ -29,23 +31,23 @@ func (server *Server) newClient(connection *websocket.Conn) *Client {
 }
 
 func (server *Server) addClient(client *Client) {
-    fmt.Println("hereeee")
-    fmt.Println(client)
-    fmt.Println(client.connection)
+	fmt.Println("hereeee")
+	fmt.Println(client)
+	fmt.Println(client.connection)
 	server.clients = append(server.clients, client)
-    fmt.Println(len(server.clients))
+	fmt.Println(len(server.clients))
 }
 
 func (server *Server) showClients() {
 	// for client := range server.clients {
 	// 	fmt.Println(client)
 	// }
-    fmt.Println("show client # clients")
-    fmt.Print(len(server.clients))
+	fmt.Println("show client # clients")
+	fmt.Print(len(server.clients))
 	for i := 0; i < len(server.clients); i++ {
-        fmt.Println("sstart connection")
+		fmt.Println("sstart connection")
 		fmt.Println(server.clients[i].connection)
-        fmt.Println("end connection")
+		fmt.Println("end connection")
 		// if err := server.clients[i].connection.WriteMessage(websocket.TextMessage, message); err != nil {
 		// 	log.Println(err)
 		// }
@@ -54,20 +56,10 @@ func (server *Server) showClients() {
 }
 
 func (server *Server) sendToClients() {
-	message := []byte("hola desde el servidor")
-	// for i, client := range *server.clients {
-	// 	fmt.Println(client)
-	// 	// if err := client.connection.WriteMessage(websocket.TextMessage, message); err != nil {
-	// 	// 	log.Println(err)
-	// 	// }
-	// 	// log.Println("sent message")
-	// }
+	circle := game.GetCircle()
 	for i := 0; i < len(server.clients); i++ {
 		fmt.Println(server.clients[i].connection)
-		if err := server.clients[i].connection.WriteMessage(websocket.TextMessage, message); err != nil {
-			log.Println(err)
-		}
-		log.Println("sent message")
+		server.clients[i].connection.WriteJSON(circle)
 	}
 }
 
@@ -76,7 +68,7 @@ func NewServer(capacity int, httpServer *http.Server, upgrader *websocket.Upgrad
 		capacity:   capacity,
 		httpServer: httpServer,
 		upgrader:   upgrader,
-		clients:    make([]*Client,0,capacity),
+		clients:    make([]*Client, 0, capacity),
 	}
 	//  how to do this better
 	server = newServer

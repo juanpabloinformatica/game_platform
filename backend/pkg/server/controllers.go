@@ -28,7 +28,7 @@ func handleSocketConnection(conn *websocket.Conn) {
 	server.addClient(client)
 	for {
 		server.sendToClients()
-		time.Sleep(1 * time.Second)
+		time.Sleep(4 * time.Second)
 	}
 
 	// for {

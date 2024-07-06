@@ -6,17 +6,19 @@ import (
 
 	"github.com/gorilla/websocket"
 
+	"github.com/juanpabloinformatica/game_platform/pkg/game"
 	"github.com/juanpabloinformatica/game_platform/pkg/server"
 )
 
 func main() {
+	// game.Init()
 	capacity := 2
 	myMux := server.NewMux()
 	httpServer := &http.Server{
 		Addr:    ":7777",
 		Handler: myMux,
 	}
-    fmt.Println(httpServer)
+	fmt.Println(httpServer)
 	upgrader := &websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -25,6 +27,7 @@ func main() {
 			return true
 		},
 	}
+    game.Init()
 	improvedServer := server.NewServer(capacity, httpServer, upgrader)
 	improvedServer.Run()
 }
