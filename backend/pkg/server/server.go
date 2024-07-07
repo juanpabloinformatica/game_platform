@@ -12,7 +12,9 @@ import (
 
 type Client struct {
 	connection *websocket.Conn
+	counter    int
 }
+
 type (
 	endpoint func()
 	Server   struct {
@@ -27,7 +29,7 @@ type (
 var server *Server
 
 func (server *Server) newClient(connection *websocket.Conn) *Client {
-	return &Client{connection: connection}
+	return &Client{connection: connection, counter: 0}
 }
 
 func (server *Server) addClient(client *Client) {
@@ -38,16 +40,16 @@ func (server *Server) addClient(client *Client) {
 	fmt.Println(len(server.clients))
 }
 
-func (server *Server) showClients() {
+func (server *Server) ShowClients() {
 	// for client := range server.clients {
 	// 	fmt.Println(client)
 	// }
 	fmt.Println("show client # clients")
 	fmt.Print(len(server.clients))
 	for i := 0; i < len(server.clients); i++ {
-		fmt.Println("sstart connection")
-		fmt.Println(server.clients[i].connection)
-		fmt.Println("end connection")
+		// fmt.Println("sstart connection")
+		fmt.Println(server.clients[i].counter)
+		// fmt.Println("end connection")
 		// if err := server.clients[i].connection.WriteMessage(websocket.TextMessage, message); err != nil {
 		// 	log.Println(err)
 		// }

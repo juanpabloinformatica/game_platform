@@ -29,20 +29,24 @@ function removeEventListener(canvas: HTMLCanvasElement) {
     canvas.removeEventListener("click", listener, true);
   }
 }
-function getClickListener(e: Event, selectedCircle: Circle) {
+function getClickListener(e: Event, selectedCircle: Circle, socket: WebSocket) {
   let mouseX = getRelativeCoords(e).x;
   let mouseY = getRelativeCoords(e).y;
   let point: Point = { x: mouseX, y: mouseY };
   if (pointInCircle(point, selectedCircle)) {
+    console.log(correctClicks);
+    socket.send(correctClicks.toString());
+    // socket.send("entro y mando numero de clicks");
     correctClicks++;
   }
 }
 function assignEventListener(
   canvas: HTMLCanvasElement,
   selectedCircle: Circle,
+  socket: WebSocket,
 ) {
   listener = (e: Event) => {
-    getClickListener(e, selectedCircle);
+    getClickListener(e, selectedCircle, socket);
   };
   canvas.addEventListener("click", listener, true);
 }
@@ -140,12 +144,23 @@ function createCircle(circle: Circle) {
 function handleCircles(canvas: HTMLCanvasElement, socket: WebSocket): void {
   if (socket) {
     socket.addEventListener("message", (e) => {
+      console.log(JSON.parse(e.data));
+      if (JSON.parse(e.data).player_1>=0) {
+        console.log(JSON.parse(e.data));
+        let info = JSON.parse(e.data);
+        let resultDiv = document.querySelector<HTMLDivElement>(".result");
+        if (resultDiv) {
+          resultDiv.style.display = "flex";
+          resultDiv.innerHTML = `finish Result </br>Jugador_1: ${info.player_1}</br>Jugador_2: ${info.player_2}`;
+          console.log(resultDiv.style);
+        }
+      }
       cleanCanvas(canvas);
       removeEventListener(canvas);
       let receivedCircle = JSON.parse(e.data);
       let circle = createCircle(receivedCircle);
       drawRandomCircle(canvas, circle);
-      assignEventListener(canvas, circle);
+      assignEventListener(canvas, circle, socket);
     });
   }
 }
