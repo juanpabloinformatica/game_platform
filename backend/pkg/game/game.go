@@ -11,10 +11,6 @@ type Circle struct {
 	SAngle   float32 `json:"sAngle"`
 	EndAngle float32 `json:"endAngle"`
 }
-type Result struct {
-	Player_1 int `json:"player_1"`
-	Player_2 int `json:"player_2"`
-}
 
 type Point struct {
 	x int
@@ -26,6 +22,7 @@ var (
 	HEIGHT           = 500
 	CIRCLE_POSITIONS []*Circle
 	BALLNUMBER       = 10
+	BALLSPEED        = 600
 )
 
 func setCirclePositions() {
@@ -54,15 +51,4 @@ func GetCircle() *Circle {
 
 func Init() {
 	setCirclePositions()
-	// for {
-	//     fmt.Println(getCircle())
-	//     time.Sleep(1*time.Second)
-	// }
-	// for _, value := range CIRCLE_POSITIONS {
-	// 	fmt.Println(value)
-	// }
 }
-
-// func Run(){
-//     getCircle()
-// }
