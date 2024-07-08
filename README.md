@@ -30,7 +30,7 @@ The Reaction Game is an interactive web-based game designed to test and improve 
 3. **End of Game**:
    - The game ends when the total number of balls have been displayed.
    - The winner will be shown
-4. ** Playing agame**:
+4. **Playing agame**:
    - touch the play button again both players (keep the same order at the moment of touching the button !)
 
 ## Installation
@@ -68,3 +68,4 @@ The Reaction Game is an interactive web-based game designed to test and improve 
 9. Open a webbrowser and redirect to http://localhost:5173 (player_2)
 
 ## Demo
+[video(1).webm](https://github.com/juanpabloinformatica/game_platform/assets/64615774/e06ad2bc-f478-4d9c-9876-09b77f7d30e7)
