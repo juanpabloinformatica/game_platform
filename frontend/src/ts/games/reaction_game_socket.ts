@@ -4,7 +4,7 @@ import { pointInCircle } from "./reaction_game_utils.ts";
 const SERVER_SOCKET_ENDPOINT = "ws://localhost:7777/ws";
 const HEIGHT = 500;
 const WIDTH = 500;
-let correctClicks = 0;
+// let correctClicks = 0;
 function cleanCanvas(canvas: HTMLCanvasElement) {
     let context = canvas.getContext("2d");
     context?.clearRect(0, 0, canvas.width, canvas.height);
@@ -26,10 +26,7 @@ function getClickListener(e: Event, selectedCircle: Circle, socket: WebSocket) {
     let mouseY = getRelativeCoords(e).y;
     let point: Point = { x: mouseX, y: mouseY };
     if (pointInCircle(point, selectedCircle)) {
-        console.log(correctClicks);
-        socket.send(correctClicks.toString());
-        // socket.send("entro y mando numero de clicks");
-        correctClicks++;
+        socket.send("");
     }
 }
 function assignEventListener(
@@ -59,12 +56,18 @@ function drawRandomCircle(canvas: HTMLCanvasElement, selectedCircle: Circle) {
         context.stroke();
     }
 }
-function finishSetup(): void {
+function ResultMessageSetup(message: string): void {
     let resultDiv = document.querySelector<HTMLDivElement>(".result");
     if (resultDiv) {
         resultDiv.style.display = "flex";
-        resultDiv.innerHTML = `finish Result  = ${correctClicks} `;
+        resultDiv.innerHTML = `<h1 style="color:white;">${message}</h1> `;
         console.log(resultDiv.style);
+    }
+}
+function hideResult() {
+    let resultDiv = document.querySelector<HTMLDivElement>(".result");
+    if (resultDiv) {
+        resultDiv.style.display = "none";
     }
 }
 // This funciton is created because if later we want to delete
@@ -98,17 +101,48 @@ function handleCircles(
     drawRandomCircle(canvas, circle);
     assignEventListener(canvas, circle, socket);
 }
+// function beforeStart
+function drawCounter(canvas: HTMLCanvasElement, counter: number) {
+    const context = canvas.getContext("2d");
+    if (context) {
+        context.font = "63px serif";
+        context.fillStyle = "white";
+        context?.fillText(counter.toString(), WIDTH / 2, HEIGHT / 2);
+    }
+}
+function generateBeforeStartSignal(
+    canvas: HTMLCanvasElement,
+    counter: number = 0,
+) {
+    let signal = setInterval(() => {
+        cleanCanvas(canvas);
+        if (counter == 2) {
+            clearInterval(signal);
+        }
+        drawCounter(canvas, counter + 1);
+        counter += 1;
+    }, 1000);
+}
 function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket): void {
     if (socket) {
-        socket.addEventListener("message", (e) => {
+        socket.addEventListener("message", async (e) => {
             let message = JSON.parse(e.data);
-            if (message && message.message.includes("winner")) {
-                console.log(message.message);
-            } else if (message && message.circle) {
-                handleCircles(canvas, socket, message.circle);
-                console.log(message.circle);
-            } else {
-                console.log(message.message);
+            if (message) {
+                if (message.missingPlayerMessage) {
+                    console.log(message.missingPlayerMessage);
+                } else if (message.beforeStartSignalMessage) {
+                    generateBeforeStartSignal(canvas);
+                    // sleep for waiting signal setInterval
+                    await new Promise((r) => setTimeout(r, 3000));
+                } else if (message.circleMessage) {
+                    handleCircles(canvas, socket, message.circleMessage);
+                    console.log(message.circleMessage);
+                } else if (message.resultMessage) {
+                    console.log(message.resultMessage);
+                    ResultMessageSetup(message.resultMessage);
+                } else {
+                    console.log(message.gameFinishMessage);
+                }
             }
         });
     }
@@ -117,6 +151,7 @@ function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement) {
     buttonListener = () => {
         let socket: WebSocket = initHttpUpgradeRequest();
         if (socket) {
+            hideResult();
             handleMessages(canvas, socket);
         }
     };

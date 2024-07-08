@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -18,7 +18,7 @@ func main() {
 		Addr:    ":7777",
 		Handler: myMux,
 	}
-	fmt.Println(httpServer)
+	// fmt.Println(httpServer)
 	upgrader := &websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -27,7 +27,7 @@ func main() {
 			return true
 		},
 	}
-    game.Init()
+	game.Init()
 	improvedServer := server.NewServer(capacity, httpServer, upgrader)
 	improvedServer.Run()
 }

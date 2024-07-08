@@ -39,45 +39,69 @@ func (server *Server) newClient(connection *websocket.Conn) *Client {
 
 func (server *Server) missingPlayerGame() {
 	message := &game.MissingPlayerMessage{
-		Message: "second player missing",
+		MissingPlayerMessage: "second player missing",
 	}
 	server.clients[0].connection.WriteJSON(message)
 }
 
+func (server *Server) sendBeforeStartSignal() {
+	beforeStartSignal := &game.BeforeStartSignalMessage{
+		BeforeStartSignalMessage: "signal",
+	}
+	server.sendToClients(beforeStartSignal)
+	time.Sleep(4 * time.Second)
+}
+
 func (server *Server) handleGame() {
 	if server.gameIsReady() {
+		server.sendBeforeStartSignal()
 		server.initGame()
-		server.setWinner()
+		server.setResult()
 		server.finishGame()
+		server.resetGame()
 	} else {
 		server.missingPlayerGame()
 	}
+}
+
+func (server *Server) resetGame() {
+	server.clients = nil
+	clientId = 0
 }
 
 func (server *Server) gameIsReady() bool {
 	return len(server.clients) == 2
 }
 
-func (server *Server) getWinner() *Client {
+func (server *Server) getResult() *Client {
 	winner := &Client{}
 	if server.clients[0].counter > server.clients[1].counter {
 		winner = server.clients[0]
-	} else {
+	} else if server.clients[1].counter > server.clients[0].counter {
 		winner = server.clients[1]
+	} else {
+		winner = nil
 	}
 	return winner
 }
 
-func (server *Server) setWinner() {
-	winner := server.getWinner()
-	resultMessage := &game.ResultMessage{
-		Message: fmt.Sprintf("Winner player %d, with %d correct clicks", winner.id, winner.counter),
+func (server *Server) setResult() {
+	winner := server.getResult()
+	resultMessage := &game.ResultMessage{}
+	if winner != nil {
+		resultMessage = &game.ResultMessage{
+			ResultMessage: fmt.Sprintf("Winner player %d, with %d correct clicks", winner.id, winner.counter),
+		}
+	} else {
+		resultMessage = &game.ResultMessage{
+			ResultMessage: fmt.Sprintf("tie"),
+		}
 	}
 	server.sendToClients(resultMessage)
 }
 
 func (server *Server) finishGame() {
-	gameFinishMessage := &game.GameFinishMessage{Message: "Game has finished\nthanks for playing"}
+	gameFinishMessage := &game.GameFinishMessage{GameFinishMessage: "Game has finished\nthanks for playing"}
 	server.sendToClients(gameFinishMessage)
 }
 
@@ -102,6 +126,7 @@ func (server *Server) addClient(client *Client) {
 }
 
 func (server *Server) ShowClients() {
+	fmt.Println(server.clients)
 	for i := 0; i < len(server.clients); i++ {
 		fmt.Println(server.clients[i])
 	}
@@ -109,7 +134,7 @@ func (server *Server) ShowClients() {
 
 func (server *Server) sendToClients(message interface{}) {
 	for i := 0; i < len(server.clients); i++ {
-		fmt.Println(server.clients[i].connection)
+		// fmt.Println(server.clients[i].connection)
 		server.clients[i].connection.WriteJSON(message)
 	}
 }

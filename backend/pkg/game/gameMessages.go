@@ -1,14 +1,17 @@
 package game
 
 type MissingPlayerMessage struct {
-	Message string `json:"message"`
+	MissingPlayerMessage string `json:"missingPlayerMessage"`
 }
 type ResultMessage struct {
-	Message string `json:"message"`
+	ResultMessage string `json:"resultMessage"`
 }
 type CircleMessage struct {
-	CircleInstance *Circle `json:"circle"`
+	CircleInstance *Circle `json:"circleMessage"`
 }
 type GameFinishMessage struct {
-	Message string `json:"message"`
+	GameFinishMessage string `json:"gameFinishMessage"`
+}
+type BeforeStartSignalMessage struct {
+	BeforeStartSignalMessage string `json:"beforeStartSignalMessage"`
 }
