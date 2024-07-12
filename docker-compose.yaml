@@ -1,0 +1,40 @@
+services:
+  database:
+    image: database:latest
+    container_name: database_container
+    build:
+      context: ${PWD}
+      dockerfile: ./database/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      # MYSQL_USER: "user"
+      # MYSQL_PASSWORD: "user"
+      MYSQL_DATABASE: "gamePlatform"
+    # healthcheck:
+    #   test:
+    #     [
+    #       "CMD",
+    #       "mysqladmin",
+    #       "ping",
+    #       "-h",
+    #       "localhost",
+    #       "-u user",
+    #       "-p user",
+    #     ]
+    #   interval: 10s
+    #   retries: 5
+    #   timeout: 5s
+    ports:
+      - "3306:3306"
+    # volumes:
+    #   - ./database/data:/var/lib/mysql
+  # auth_backend:
+
+#   website_frontend:
+#   game_backend:
+#   game_frontend:
+#
+# networks:
+#   my-network:
+#     driver: bridge
+# /usr/local/bin/docker-entrypoint.sh: line 75: /docker-entrypoint-initdb.d/init.sql: Permission denied
