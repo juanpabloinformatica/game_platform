@@ -10,31 +10,37 @@ services:
       # MYSQL_USER: "user"
       # MYSQL_PASSWORD: "user"
       MYSQL_DATABASE: "gamePlatform"
-    # healthcheck:
-    #   test:
-    #     [
-    #       "CMD",
-    #       "mysqladmin",
-    #       "ping",
-    #       "-h",
-    #       "localhost",
-    #       "-u user",
-    #       "-p user",
-    #     ]
-    #   interval: 10s
-    #   retries: 5
-    #   timeout: 5s
+    healthcheck:
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u user", "-p user"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
     ports:
       - "3306:3306"
     # volumes:
     #   - ./database/data:/var/lib/mysql
   # auth_backend:
-
-#   website_frontend:
+  #   image: authbackend:latest
+  #   container_name: authbackend_container
+  #   build:
+  #     context: ${PWD}
+  #     dockerfile: ./auth_backend/Dockerfile
+  #   depends_on:
+  #     database:
+  #       condition: service_healthy
+  #   ports:
+  #     - 3000:3000
+  # website_frontend:
+  #   image: websitefrotend:latest
+  #   container_name: websitefrontend_container
+  #   build:
+  #     context: ${PWD}
+  #     dockerfile: ./website_frontend/Dockerfile
+  #   # depends_on:
+  #   #   - auth_backend
+  #   ports:
+  #     - 5173:5173
 #   game_backend:
 #   game_frontend:
 #
-# networks:
-#   my-network:
-#     driver: bridge
-# /usr/local/bin/docker-entrypoint.sh: line 75: /docker-entrypoint-initdb.d/init.sql: Permission denied
