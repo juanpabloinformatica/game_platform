@@ -1,13 +1,21 @@
-async function sendLogin(username: string, password: string) {
-    if (username != "" && password != "") {
+async function sendRegistration(
+    username: string,
+    password: string,
+    confirmPassword: string,
+) {
+    if (username != "" && password != "" && confirmPassword != "") {
         try {
-            const response = await fetch("http://localhost:3000/login", {
+            const response = await fetch("http://localhost:3000/register", {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username: username, password: password }),
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    confirmPassword: confirmPassword,
+                }),
             });
             if (!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
@@ -20,4 +28,4 @@ async function sendLogin(username: string, password: string) {
     }
 }
 
-export { sendLogin };
+export { sendRegistration };

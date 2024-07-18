@@ -51,7 +51,7 @@ function drawRandomCircle(canvas: HTMLCanvasElement, selectedCircle: Circle) {
             selectedCircle.sAngle,
             selectedCircle.endAngle,
         );
-        context.fillStyle = "red";
+        context.fillStyle = "black";
         context.fill();
         context.stroke();
     }

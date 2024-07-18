@@ -1,0 +1,28 @@
+.navbarWrapper {
+    position: fixed;
+    width: 100vw;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+    background-color: black;
+}
+
+.navLink {
+    text-decoration: none;
+    color: white;
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    &:focus {
+        text-decoration: none;
+    }
+
+    &:active {
+        text-decoration: none;
+    }
+}

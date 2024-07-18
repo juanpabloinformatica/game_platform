@@ -1,80 +1,60 @@
 
 import CustomNavbar from "../components/Navbar";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { useState } from "react";
+import useRegisterState from "../hooks/pages/register/registerState";
+import { useNavigate } from "react-router-dom";
+import { sendRegistration } from "../services/register/registerServices";
+import Footer from "../components/Footer";
 
 function RegisgterForm() {
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
+    const navigate = useNavigate()
+    const { username, setUsername, password, setPassword, confirmPassword, setConfirmPassword } = useRegisterState()
     const handleSubmit = async (event: Event) => {
         event.preventDefault();
-        if (username != "" && password != "" && confirmPassword != "") {
-            try {
-                const response = await fetch("http://localhost:3000/register", {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username: username, password: password, confirmPassword: confirmPassword })
-                });
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
-                }
-                const json = await response.json();
-                console.log(json);
-            } catch (error) {
-                console.error(error.message);
-            }
+        try {
+            const response = await sendRegistration(username, password, confirmPassword);
+            navigate("/login")
+        } catch (error) {
+            console.log(error)
         }
     }
-    return (
-        <Form action="http://localhost:3000/register" method="POST" className="p-4 rounded shadow-sm bg-light">
-            <h2 className="mb-4 text-center">Register</h2>
-            <Form.Group className="mb-3" controlId="formBasicUser">
-                <Form.Label>Username</Form.Label>
-                <Form.Control
+    return (<>
+        <div className="loginWrapper">
+            <form onSubmit={handleSubmit} className="form">
+                <label>Username</label>
+                <input
                     name="username"
                     type="text"
                     value={username}
-                    onChange={e => setUsername(e.target.value)}
-                    placeholder="Enter username"
-                    className="p-2"
-                />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                    name="password"
-                    type="password"
+                    onChange={(e) => setUsername(e.target.value)}
+                ></input>
+                <label>Password</label>
+                <input
+                    name="username"
+                    type="text"
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="Password"
-                    className="p-2"
-                />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control
-                    name="confirmPassword"
-                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                ></input>
+                <label>Confirm password </label>
+                <input
+                    name="username"
+                    type="text"
                     value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm Password"
-                    className="p-2"
-                />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="w-100">
-                Submit
-            </Button>
-        </Form>
-    );
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                ></input>
+                <button type="submit">
+                    submit
+                </button>
+            </form>
+        </div>
+    </>)
 }
+
 function RegisterPage() {
     return (<><CustomNavbar />
-        <RegisgterForm /></>
+        <RegisgterForm />
+        <Footer />
+    </>
     )
 }
 export default RegisterPage;

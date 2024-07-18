@@ -1,0 +1,25 @@
+@import "../components/_navbar";
+
+.homeBody {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    .message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-right: 10px;
+        padding-left: 10px;
+        line-height: 30px;
+    }
+}
+
+/* @media only screen and (max-width: 600px) { */
+/*     .homeBody { */
+/*         text-align: center; */
+/*     } */
+/* } */

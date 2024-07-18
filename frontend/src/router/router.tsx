@@ -6,7 +6,7 @@ import RegisterPage from '../pages/Register';
 import GamesPage from '../pages/Games'
 import ReactionGame from '../games/ReactionGame';
 import ProtectedRoute from './ProtectedRoute';
-import NotAuthorized from '../components/NotAuthorized';
+import NotAuthorized from '../pages/NotAuthorized';
 const router = createBrowserRouter([{
 
     path: "/",
@@ -30,7 +30,7 @@ const router = createBrowserRouter([{
     path: "/register", element: <RegisterPage />
 },
 {
-    path: "/notAuthorized",element: <NotAuthorized/>
+    path: "/notAuthorized", element: <NotAuthorized />
 },
 {
     path: "*",

@@ -1,0 +1,9 @@
+.submitButton {
+    padding: 5px;
+    background-color: grey;
+    border-radius: 10px 5px;
+
+    &:hover {
+        background-color: white;
+    }
+}

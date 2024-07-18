@@ -1,29 +1,19 @@
-import { Form, Button, Container } from 'react-bootstrap';
 import CustomNavbar from '../components/Navbar';
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from 'react';
 import { sendLogin } from '../services/login/loginServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAuthenticated } from '../redux/features/auth/authSlice';
+import useAcessState from '../hooks/pages/login/accessState';
+import Footer from '../components/Footer';
 
 function LoginForm() {
     const navigate = useNavigate()
-    const isAuth = useSelector((state) => {
-        console.log(state.auth.isAuth)
-        return state.auth.isAuth
-    })
-    // useEffect(() => { console.log(`testing change ${isAuth}`) }, [isAuth])
+    const isAuth = useSelector((state) => state.auth.isAuth)
     const dispatch = useDispatch()
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-
-
-
+    const { username, setUsername, password, setPassword } = useAcessState()
     const handleSubmit = async (event: Event) => {
-
         event.preventDefault();
         try {
-            // console.log("here")
             const response = await sendLogin(username, password)
             console.log("before dispatch")
             console.log(isAuth)
@@ -36,43 +26,36 @@ function LoginForm() {
             console.log(error)
         }
     }
-    return (
-        <Container onSubmit={handleSubmit} className="d-flex justify-content-center align-items-center vh-100">
-            <Form action="http://localhost:3000/login" method="POST" className="p-4 rounded shadow-sm bg-light w-50">
-                <h2 className="mb-4 text-center text-primary">Login</h2>
-                <Form.Group className="mb-3" controlId="formBasicUser">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        name="username"
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter username"
-                        className="p-2"
-                    />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        name="password"
-                        type="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        placeholder="Password"
-                        className="p-2"
-                    />
-                </Form.Group>
-                <Button variant="primary" type="submit" className="w-100">
-                    Submit
-                </Button>
-            </Form>
-        </Container>
-    );
+    return (<>
+        <div className="loginWrapper">
+            <form onSubmit={handleSubmit} className="form">
+                <label>Username</label>
+                <input
+                    name="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                ></input>
+                <label>Password</label>
+                <input
+                    name="username"
+                    type="text"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                ></input>
+                <button type="submit">
+                    submit
+                </button>
+            </form>
+        </div>
+
+    </>)
 }
 function LoginPage() {
     return (<>
         <CustomNavbar />
         <LoginForm />
+        <Footer/>
     </>)
 }
 export default LoginPage;
