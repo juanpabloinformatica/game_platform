@@ -1,7 +1,7 @@
 import { generateId, getRelativeCoords } from "../utils";
 import { Circle, Point } from "./reaction_game_types.ts";
 import { pointInCircle } from "./reaction_game_utils.ts";
-let SERVER_SOCKET_ENDPOINT = "ws://localhost:7777/ws";
+// let SERVER_SOCKET_ENDPOINT = "ws://localhost:7777/ws";
 const HEIGHT = 500;
 const WIDTH = 500;
 // let correctClicks = 0;
@@ -9,10 +9,19 @@ function cleanCanvas(canvas: HTMLCanvasElement) {
     let context = canvas.getContext("2d");
     context?.clearRect(0, 0, canvas.width, canvas.height);
 }
-function setCanvas(canvas: HTMLCanvasElement, width: number, height: number) {
+// function setCanvas(canvas: HTMLCanvasElement, width: number, height: number) {
+//     if (canvas) {
+//         canvas.width = width;
+//         canvas.height = height;
+//     }
+// }
+function setCanvas(canvas: HTMLCanvasElement) {
     if (canvas) {
-        canvas.width = width;
-        canvas.height = height;
+        // canvas.width = width;
+        // canvas.height = height;
+        canvas.width = WIDTH;
+        canvas.height = HEIGHT;
+
     }
 }
 let listener: (e: Event) => void;
@@ -56,16 +65,16 @@ function drawRandomCircle(canvas: HTMLCanvasElement, selectedCircle: Circle) {
         context.stroke();
     }
 }
-function ResultMessageSetup(message: string): void {
-    let resultDiv = document.querySelector<HTMLDivElement>(".result");
+function ResultMessageSetup(resultDiv, message: string): void {
+    // let resultDiv = document.querySelector<HTMLDivElement>(".result");
     if (resultDiv) {
         resultDiv.style.display = "flex";
         resultDiv.innerHTML = `<h1 style="color:white;">${message}</h1> `;
         console.log(resultDiv.style);
     }
 }
-function hideResult() {
-    let resultDiv = document.querySelector<HTMLDivElement>(".result");
+function hideResult(resultDiv) {
+    // let resultDiv = document.querySelector<HTMLDivElement>(".result");
     if (resultDiv) {
         resultDiv.style.display = "none";
     }
@@ -73,10 +82,18 @@ function hideResult() {
 // This funciton is created because if later we want to delete
 // the listener we would need it
 let buttonListener: () => void;
-function initHttpUpgradeRequest(): WebSocket | null {
+// function initHttpUpgradeRequest(): WebSocket | null {
+//     let socket: WebSocket | null = null;
+//     if (window["WebSocket"]) {
+//         socket = new WebSocket(SERVER_SOCKET_ENDPOINT);
+//     }
+//     return socket;
+// }
+//
+function initHttpUpgradeRequest(socketConnection: string): WebSocket | null {
     let socket: WebSocket | null = null;
     if (window["WebSocket"]) {
-        socket = new WebSocket(SERVER_SOCKET_ENDPOINT);
+        socket = new WebSocket(socketConnection);
     }
     return socket;
 }
@@ -123,9 +140,10 @@ function generateBeforeStartSignal(
         counter += 1;
     }, 1000);
 }
-function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket): void {
+function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket, result: HTMLDivElement): void {
     if (socket) {
         socket.addEventListener("message", async (e) => {
+            console.log("hello from here")
             let message = JSON.parse(e.data);
             if (message) {
                 if (message.missingPlayerMessage) {
@@ -139,7 +157,7 @@ function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket): void {
                     console.log(message.circleMessage);
                 } else if (message.resultMessage) {
                     console.log(message.resultMessage);
-                    ResultMessageSetup(message.resultMessage);
+                    ResultMessageSetup(result, message.resultMessage);
                 } else {
                     console.log(message.gameFinishMessage);
                 }
@@ -147,32 +165,70 @@ function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket): void {
         });
     }
 }
-function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement) {
+// function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result: HTMLDivElement, socket: WebSocket) {
+//     console.log("inside setButton")
+//     buttonListener = () => {
+//         if (socket) {
+//             // hideResult(result);
+//             // handleMessages(canvas, socket, result);
+//             socket.send("ready")
+//         }
+//     };
+//     button.addEventListener("click", buttonListener);
+// }
+function setButton(button: HTMLButtonElement, socket: WebSocket) {
+    console.log("inside setButton")
+    console.log(socket)
     buttonListener = () => {
-        let socket: WebSocket = initHttpUpgradeRequest();
+        console.log("he dado click")
         if (socket) {
-            hideResult();
-            handleMessages(canvas, socket);
+
+            console.log("here")
+            // hideResult(result);
+            // handleMessages(canvas, socket, result);
+            socket.send("ready")
         }
     };
     button.addEventListener("click", buttonListener);
 }
+// function setSocketConnection() {
+//     let id = generateId().toString();
+//     SERVER_SOCKET_ENDPOINT += "?" + "token" + "=" + "string" + id;
+// }
 function setSocketConnection() {
     let id = generateId().toString();
-    SERVER_SOCKET_ENDPOINT += "?" + "token" + "=" + "string" + id;
+    return "ws://localhost:7777/ws" + "?" + "token" + "=" + "string" + id;
 }
-function init(CANVAS,BUTTON,RESULT) {
-    console.log('holaaaaaaaaa game frontend')
-    const CANVAS = document?.querySelector<HTMLCanvasElement>("#myCanvas");
-    const BUTTON = document?.querySelector<HTMLButtonElement>(".gameButton");
-    if (BUTTON && CANVAS) {
+// function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement, socket: WebSocket) {
+//     console.log(button)
+//     // console.log(socket)
+//     if (button && canvas) {
+//         console.log("entreeee")
+//         // setCirclePositions(WIDTH, HEIGHT);
+//
+//         // setCanvas(canvas, WIDTH, HEIGHT);
+//         // setSocketConnection();
+//         //button start the game
+//         // setButton(BUTTON, CANVAS);
+//         setButton(button, socket);
+//         // handleMessages(canvas, socket, result)
+//     }
+// }
+//
+function init(button: HTMLButtonElement, socket: WebSocket) {
+    console.log(button)
+    // console.log(socket)
+    if (button && socket) {
+        console.log("entreeee")
         // setCirclePositions(WIDTH, HEIGHT);
 
-        setCanvas(CANVAS, WIDTH, HEIGHT);
-        setSocketConnection();
+        // setCanvas(canvas, WIDTH, HEIGHT);
+        // setSocketConnection();
         //button start the game
         // setButton(BUTTON, CANVAS);
-        setButton(BUTTON, CANVAS);
+        setButton(button, socket);
+        // handleMessages(canvas, socket, result)
     }
 }
-export { init };
+
+export { setButton, init, setCanvas, setSocketConnection, initHttpUpgradeRequest };

@@ -17,24 +17,38 @@ func handlerWs(writter http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	handleSocketConnection(conn)
+	handleSocketConnection(conn, writter, request)
 }
 
-func handleSocketConnection(conn *websocket.Conn) {
-	client := server.newClient(conn)
+func getClientId(request *http.Request) string {
+	clientId := request.URL.Query().Get("token")
+	fmt.Println("line [25]----- here the client id-----")
+	fmt.Println(clientId)
+	fmt.Println("----------")
+	return clientId
+}
+
+func handleSocketConnection(conn *websocket.Conn, writter http.ResponseWriter, request *http.Request) {
+	clientId := getClientId(request)
+	client := server.newClient(conn, clientId)
 	server.addClient(client)
 	go hearMessage(client)
 	server.handleGame()
 }
 
 func hearMessage(client *Client) {
-	defer client.connection.Close()
+	// defer client.connection.Close()
 	for {
-		_, _, err := client.connection.ReadMessage()
+		_, p, err := client.connection.ReadMessage()
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		client.counter += 1
+        fmt.Println(string(p))
+		if string(p) == "ready" {
+			server.clientsReady += 1
+		} else {
+			client.counter += 1
+		}
 	}
 }

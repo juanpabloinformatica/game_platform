@@ -4,9 +4,10 @@ import Page from '../pages/Home';
 import LoginPage from '../pages/Login';
 import RegisterPage from '../pages/Register';
 import GamesPage from '../pages/Games'
-import ReactionGame from '../games/ReactionGame';
+// import ReactionGame from '../games/ReactionGame';
 import ProtectedRoute from './ProtectedRoute';
 import NotAuthorized from '../pages/NotAuthorized';
+import ReactionGame from '../games/ReactionGameReact';
 const router = createBrowserRouter([{
 
     path: "/",
