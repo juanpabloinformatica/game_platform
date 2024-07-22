@@ -7,7 +7,9 @@ import GamesPage from '../pages/Games'
 // import ReactionGame from '../games/ReactionGame';
 import ProtectedRoute from './ProtectedRoute';
 import NotAuthorized from '../pages/NotAuthorized';
-import ReactionGame from '../games/ReactionGameReact';
+import ReactionGame from '../games/ReactionGame';
+import UserHome from '../pages/UserHome';
+import ReactionGameConfig from '../pages/GameReactionConfig';
 const router = createBrowserRouter([{
 
     path: "/",
@@ -16,6 +18,12 @@ const router = createBrowserRouter([{
 {
     element: <ProtectedRoute />,
     children: [
+        {
+            path: "/userhome", element: <UserHome />
+        },
+        {
+            path: "/reactiongameconfig", element: <ReactionGameConfig />
+        },
         {
             path: "/games", element: <GamesPage />
         },

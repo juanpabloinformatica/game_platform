@@ -90,13 +90,6 @@ let buttonListener: () => void;
 //     return socket;
 // }
 //
-function initHttpUpgradeRequest(socketConnection: string): WebSocket | null {
-    let socket: WebSocket | null = null;
-    if (window["WebSocket"]) {
-        socket = new WebSocket(socketConnection);
-    }
-    return socket;
-}
 function createCircle(circle: Circle) {
     let newCircle: Circle = {
         posX: circle.posX,
@@ -143,7 +136,6 @@ function generateBeforeStartSignal(
 function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket, result: HTMLDivElement): void {
     if (socket) {
         socket.addEventListener("message", async (e) => {
-            console.log("hello from here")
             let message = JSON.parse(e.data);
             if (message) {
                 if (message.missingPlayerMessage) {
@@ -165,70 +157,22 @@ function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket, result: HT
         });
     }
 }
-// function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result: HTMLDivElement, socket: WebSocket) {
-//     console.log("inside setButton")
-//     buttonListener = () => {
-//         if (socket) {
-//             // hideResult(result);
-//             // handleMessages(canvas, socket, result);
-//             socket.send("ready")
-//         }
-//     };
-//     button.addEventListener("click", buttonListener);
-// }
 function setButton(button: HTMLButtonElement, socket: WebSocket) {
     console.log("inside setButton")
     console.log(socket)
     buttonListener = () => {
         console.log("he dado click")
         if (socket) {
-
-            console.log("here")
-            // hideResult(result);
-            // handleMessages(canvas, socket, result);
             socket.send("ready")
         }
     };
     button.addEventListener("click", buttonListener);
 }
-// function setSocketConnection() {
-//     let id = generateId().toString();
-//     SERVER_SOCKET_ENDPOINT += "?" + "token" + "=" + "string" + id;
-// }
-function setSocketConnection() {
-    let id = generateId().toString();
-    return "ws://localhost:7777/ws" + "?" + "token" + "=" + "string" + id;
-}
-// function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement, socket: WebSocket) {
-//     console.log(button)
-//     // console.log(socket)
-//     if (button && canvas) {
-//         console.log("entreeee")
-//         // setCirclePositions(WIDTH, HEIGHT);
-//
-//         // setCanvas(canvas, WIDTH, HEIGHT);
-//         // setSocketConnection();
-//         //button start the game
-//         // setButton(BUTTON, CANVAS);
-//         setButton(button, socket);
-//         // handleMessages(canvas, socket, result)
-//     }
-// }
-//
-function init(button: HTMLButtonElement, socket: WebSocket) {
-    console.log(button)
-    // console.log(socket)
-    if (button && socket) {
-        console.log("entreeee")
-        // setCirclePositions(WIDTH, HEIGHT);
-
-        // setCanvas(canvas, WIDTH, HEIGHT);
-        // setSocketConnection();
-        //button start the game
-        // setButton(BUTTON, CANVAS);
+function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, socket: WebSocket, result: HTMLDivElement) {
+    if (canvas && socket && socket && result) {
         setButton(button, socket);
-        // handleMessages(canvas, socket, result)
+        handleMessages(canvas, socket, result)
     }
 }
 
-export { setButton, init, setCanvas, setSocketConnection, initHttpUpgradeRequest };
+export { setButton, init, setCanvas };

@@ -7,9 +7,9 @@ function GamesPage() {
     return (<>
         <CustomNavbar />
         <div className="gamesPageWrapper">
-            <Link to="/reactiongame">ReactionGame</Link>
+            <Link to="/reactiongameconfig">ReactionGame</Link>
         </div>
-        <Footer/>
+        <Footer />
     </>)
 }
 

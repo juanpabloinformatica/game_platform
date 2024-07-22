@@ -19,7 +19,7 @@ function LoginForm() {
             console.log(isAuth)
             if (response.accessToken) {
                 dispatch(isAuthenticated(true))
-                navigate("/games")
+                navigate("/userhome")
             }
             console.log(response)
         } catch (error) {

@@ -42,7 +42,6 @@ func (server *Server) missingPlayerGame() {
 		MissingPlayerMessage: "second player missing",
 	}
 	server.sendToClients(message)
-	// server.clients[0].connection.WriteJSON(message)
 }
 
 func (server *Server) sendBeforeStartSignal() {
@@ -55,22 +54,22 @@ func (server *Server) sendBeforeStartSignal() {
 }
 
 func (server *Server) readyToPlay() bool {
-    fmt.Println(server.clientsReady)
-	return server.clientsReady == len(server.clients)
+	for {
+		if server.clientsReady == len(server.clients) {
+			return true
+		}
+	}
 }
 
 func (server *Server) handleGame() {
 	if server.gameIsReady() {
-		for {
-            if server.readyToPlay(){
-                break
-            }
-        }
+		server.readyToPlay()
 		server.sendBeforeStartSignal()
 		server.initGame()
 		server.setResult()
 		server.finishGame()
 		server.resetGame()
+		server.handleGame()
 	} else {
 		server.missingPlayerGame()
 	}
@@ -80,6 +79,7 @@ func (server *Server) resetGame() {
 	for _, client := range server.clients {
 		client.counter = 0
 	}
+	server.clientsReady = 0
 }
 
 func (server *Server) gameIsReady() bool {
@@ -97,14 +97,7 @@ func (server *Server) getResult() *Client {
 			id = clientId
 		}
 	}
-	return server.clients[id]
-	// if server.clients[0].counter > server.clients[1].counter {
-	// 	winner = server.clients[0]
-	// } else if server.clients[1].counter > server.clients[0].counter {
-	// 	winner = server.clients[1]
-	// } else {
-	// 	winner = nil
-	// }
+	winner = server.clients[id]
 	return winner
 }
 
@@ -145,27 +138,16 @@ func (server *Server) initGame() {
 }
 
 func (server *Server) addClient(client *Client) {
-	// server.clients = append(server.clients, client)
-	// fmt.Println(client.id)
-	// fmt.Println(client)
 	server.clients[client.id] = client
 }
 
 func (server *Server) ShowClients() {
-	// fmt.Println(server.clients)
-	// for i := 0; i < len(server.clients); i++ {
-	// 	fmt.Println(server.clients[i])
-	// }
 	for clientId, client := range server.clients {
 		fmt.Printf("client with id: %s and connection %+v", clientId, client.connection)
 	}
 }
 
 func (server *Server) sendToClients(message interface{}) {
-	// for i := 0; i < len(server.clients); i++ {
-	// 	// fmt.Println(server.clients[i].connection)
-	// 	server.clients[i].connection.WriteJSON(message)
-	// }
 	for _, client := range server.clients {
 		client.connection.WriteJSON(message)
 	}
@@ -179,7 +161,6 @@ func NewServer(capacity int, httpServer *http.Server, upgrader *websocket.Upgrad
 		clients:      make(map[string]*Client),
 		clientsReady: 0,
 	}
-	// do this better
 	server = newServer
 	return newServer
 }

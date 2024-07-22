@@ -11,11 +11,24 @@ function getMousePositionRelativeOnElement(element: HTMLElement) {
 }
 function generateId() {
   let id = randomInteger(0, 10000);
-  return id
+  return id;
+}
+function initHttpUpgradeRequest(socketConnection: string): WebSocket | null {
+  let socket: WebSocket | null = null;
+  if (window["WebSocket"]) {
+    socket = new WebSocket(socketConnection);
+  }
+  return socket;
+}
+function setSocketConnection() {
+  let id = generateId().toString();
+  return "ws://localhost:7777/ws" + "?" + "token" + "=" + "string" + id;
 }
 export {
   randomInteger,
   getMousePositionRelativeOnElement,
   getRelativeCoords,
   generateId,
+  initHttpUpgradeRequest,
+  setSocketConnection,
 };
