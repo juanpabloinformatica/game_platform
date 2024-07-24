@@ -1,7 +1,8 @@
-import { generateId, getRelativeCoords } from "../utils";
+import { getRelativeCoords, initHttpUpgradeRequest, setSocketConnection } from "../utils";
 import { Circle, Point } from "./reaction_game_types.ts";
 import { pointInCircle } from "./reaction_game_utils.ts";
 // let SERVER_SOCKET_ENDPOINT = "ws://localhost:7777/ws";
+let SOCKET: WebSocket | null = null
 const HEIGHT = 500;
 const WIDTH = 500;
 // let correctClicks = 0;
@@ -9,11 +10,9 @@ function cleanCanvas(canvas: HTMLCanvasElement) {
     let context = canvas.getContext("2d");
     context?.clearRect(0, 0, canvas.width, canvas.height);
 }
-// function setCanvas(canvas: HTMLCanvasElement, width: number, height: number) {
-//     if (canvas) {
-//         canvas.width = width;
-//         canvas.height = height;
-//     }
+
+// function setGameConfig(ballSpeed:number,ballNumber:number){
+//
 // }
 function setCanvas(canvas: HTMLCanvasElement) {
     if (canvas) {
@@ -168,10 +167,17 @@ function setButton(button: HTMLButtonElement, socket: WebSocket) {
     };
     button.addEventListener("click", buttonListener);
 }
-function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, socket: WebSocket, result: HTMLDivElement) {
-    if (canvas && socket && socket && result) {
-        setButton(button, socket);
-        handleMessages(canvas, socket, result)
+function setGameConfig(ballSpeed,ballNumber,width,height){
+
+}
+function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement) {
+    if (canvas && result) {
+        if (!SOCKET) {
+            let socketConnection = setSocketConnection()
+            SOCKET = initHttpUpgradeRequest(socketConnection)
+        }
+        setButton(button, SOCKET!);
+        handleMessages(canvas, SOCKET!, result)
     }
 }
 

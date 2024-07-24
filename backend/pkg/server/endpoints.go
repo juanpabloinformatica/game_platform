@@ -7,6 +7,7 @@ import (
 func setMux(mux *http.ServeMux) {
 	mux.HandleFunc("/", handler)
 	mux.HandleFunc("/ws", handlerWs)
+	mux.HandleFunc("/reactiongameconfig", handleReactionGameConfig)
 }
 
 func NewMux() *http.ServeMux {

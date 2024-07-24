@@ -9,7 +9,7 @@ import ProtectedRoute from './ProtectedRoute';
 import NotAuthorized from '../pages/NotAuthorized';
 import ReactionGame from '../games/ReactionGame';
 import UserHome from '../pages/UserHome';
-import ReactionGameConfig from '../pages/GameReactionConfig';
+import ReactionGameConfig from '../pages/ReactionGameConfig';
 const router = createBrowserRouter([{
 
     path: "/",

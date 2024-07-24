@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,6 +26,7 @@ type (
 		upgrader     *websocket.Upgrader
 		clients      map[string]*Client
 		clientsReady int
+		game         *game.Game
 	}
 )
 
@@ -35,6 +37,16 @@ var (
 
 func (server *Server) newClient(connection *websocket.Conn, clientId string) *Client {
 	return &Client{connection: connection, counter: 0, id: clientId}
+}
+
+func (server *Server) setGame(gameConfig *game.GameConfig) {
+	server.game = game.NewGame(gameConfig)
+	server.game.SetCirclePositions()
+	fmt.Println("ball speed")
+	fmt.Println(server.game.GameConfigI.BallSpeed)
+	fmt.Println("ball number")
+	fmt.Println(server.game.GameConfigI.BallNumber)
+	fmt.Println(len(server.game.CirclePositions))
 }
 
 func (server *Server) missingPlayerGame() {
@@ -62,17 +74,21 @@ func (server *Server) readyToPlay() bool {
 }
 
 func (server *Server) handleGame() {
-	if server.gameIsReady() {
-		server.readyToPlay()
-		server.sendBeforeStartSignal()
-		server.initGame()
-		server.setResult()
-		server.finishGame()
-		server.resetGame()
-		server.handleGame()
-	} else {
+	if server.gameIsReady() == false {
 		server.missingPlayerGame()
+		return
 	}
+	server.readyToPlay()
+	// server.game is been writting twice that's the reason only a player can put the settings
+	if server.game == nil {
+		panic(errors.New("not game configuration yet"))
+	}
+	server.sendBeforeStartSignal()
+	server.initGame()
+	server.setResult()
+	server.finishGame()
+	server.resetGame()
+	server.handleGame()
 }
 
 func (server *Server) resetGame() {
@@ -124,16 +140,18 @@ func (server *Server) finishGame() {
 func (server *Server) initGame() {
 	count := 0
 	for {
-		if count == game.BALLNUMBER-1 {
+        fmt.Println(count)
+		if count > server.game.GameConfigI.BallNumber-1 {
 			break
 		}
 		count += 1
-		circle := game.GetCircle()
+		circle := server.game.GetCircle()
 		circleMessage := &game.CircleMessage{
 			CircleInstance: circle,
 		}
 		server.sendToClients(circleMessage)
-		time.Sleep(time.Duration(game.BALLSPEED) * time.Millisecond)
+		millisecond := int(server.game.GameConfigI.BallSpeed * 1000)
+		time.Sleep(time.Duration(millisecond) * time.Millisecond)
 	}
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "../styles/styles.css"
 import CustomNavbar from "../components/Navbar";
 // import Footer from "../components/Footer";
@@ -12,16 +12,14 @@ function ReactionGame() {
     let canvasRef = useRef(null);
     let buttonRef = useRef(null);
     let resultRef = useRef(null);
-    const [websocket, setWebsocket] = useState(null)
+    // const [websocket, setWebsocket] = useState(null)
     useEffect(() => {
-        console.log(ballSpeed)
-        console.log(ballNumber)
+        // console.log(ballSpeed)
+        // console.log(ballNumber)
         let canvas = canvasRef.current;
         setCanvas(canvas!)
-        let socketConnection = setSocketConnection()
-        let socket = initHttpUpgradeRequest(socketConnection)
-// passing here the new values
-        init(canvasRef.current!, buttonRef.current!, socket!, resultRef.current!)
+        // setGameConfig()
+        init(canvasRef.current!, buttonRef.current!, resultRef.current!)
     }, [])
     return (<>
         <CustomNavbar />

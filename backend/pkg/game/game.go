@@ -12,6 +12,37 @@ type Circle struct {
 	EndAngle float32 `json:"endAngle"`
 }
 
+type GameConfig struct {
+	BallNumber int     `json:"ballNumber"`
+	BallSpeed  float32 `json:"ballSpeed"`
+}
+
+type Game struct {
+	Width           int `json:"width"`
+	Height          int `json:"height"`
+	GameConfigI     *GameConfig
+	CirclePositions []*Circle
+	// I should add this part
+	// MissingPlayerMessage     string  `json:"missingPlayerMessage"`
+	// ResultMessage            string  `json:"resultMessage"`
+	// CircleInstance           *Circle `json:"circleMessage"`
+	// GameFinishMessage        string  `json:"gameFinishMessage"`
+	// BeforeStartSignalMessage string  `json:"beforeStartSignalMessage"`
+}
+
+func NewGame(gameConfig *GameConfig) *Game {
+	return &Game{
+		Width:       500,
+		Height:      500,
+		GameConfigI: gameConfig,
+	}
+}
+
+// type GameConfig struct {
+// 	BallNumber float32
+// 	BallSpeed  int
+// }
+
 type Point struct {
 	x int
 	y int
@@ -25,8 +56,9 @@ var (
 	BALLSPEED        = 600
 )
 
-func setCirclePositions() {
-	size := WIDTH
+func (game *Game) SetCirclePositions() {
+	// size := WIDTH
+	size := game.Width
 	for y := 0; y < size/100; y += 1 {
 		for x := 0; x < size/100; x += 1 {
 			newCircle := &Circle{
@@ -36,19 +68,19 @@ func setCirclePositions() {
 				SAngle:   0,
 				EndAngle: 2 * math.Pi,
 			}
-			CIRCLE_POSITIONS = append(CIRCLE_POSITIONS, newCircle)
+			game.CirclePositions = append(game.CirclePositions, newCircle)
 		}
 	}
 }
 
-func GetCircle() *Circle {
+func (game *Game) GetCircle() *Circle {
 	min := 0
-	max := len(CIRCLE_POSITIONS) - 1
+	max := len(game.CirclePositions) - 1
 	randomIndex := randomInteger(min, max)
-	selectedCircle := CIRCLE_POSITIONS[randomIndex]
+	selectedCircle := game.CirclePositions[randomIndex]
 	return selectedCircle
 }
 
-func Init() {
-	setCirclePositions()
-}
+// func Init() {
+// 	setCirclePositions()
+// }
