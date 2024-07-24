@@ -25,7 +25,20 @@ func handlerWs(writter http.ResponseWriter, request *http.Request) {
 	handleSocketConnection(conn, writter, request)
 }
 
-func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request) {
+// func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request) {
+// 	gameConfig := &game.GameConfig{}
+// 	body, err := ioutil.ReadAll(request.Body)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	if len(body) <= 0 {
+// 		panic(errors.New("empty body"))
+// 	}
+// 	json.Unmarshal(body, gameConfig)
+// 	server.setGame(gameConfig)
+// }
+
+func handleCreateReactionGame(writter http.ResponseWriter, request *http.Request) {
 	gameConfig := &game.GameConfig{}
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
@@ -36,6 +49,10 @@ func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request
 	}
 	json.Unmarshal(body, gameConfig)
 	server.setGame(gameConfig)
+}
+
+func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request){
+
 }
 
 func getClientId(request *http.Request) string {

@@ -19,7 +19,7 @@ function RegisgterForm() {
         }
     }
     return (<>
-        <div className="loginWrapper">
+        <div className="wrapperCenter">
             <form onSubmit={handleSubmit} className="form">
                 <label>Username</label>
                 <input

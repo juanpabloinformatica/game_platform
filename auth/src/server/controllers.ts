@@ -57,4 +57,5 @@ async function login(req: express.Request, res: express.Response) {
     res.send({ message: "login failed" });
   }
 }
+
 export { addUser, login };

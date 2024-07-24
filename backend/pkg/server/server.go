@@ -33,6 +33,7 @@ type (
 var (
 	server   *Server
 	clientId = 0
+	gameId   = 0
 )
 
 func (server *Server) newClient(connection *websocket.Conn, clientId string) *Client {
@@ -40,13 +41,16 @@ func (server *Server) newClient(connection *websocket.Conn, clientId string) *Cl
 }
 
 func (server *Server) setGame(gameConfig *game.GameConfig) {
+	gameConfig.Id = gameId
+	gameId++
 	server.game = game.NewGame(gameConfig)
 	server.game.SetCirclePositions()
-	fmt.Println("ball speed")
-	fmt.Println(server.game.GameConfigI.BallSpeed)
-	fmt.Println("ball number")
-	fmt.Println(server.game.GameConfigI.BallNumber)
-	fmt.Println(len(server.game.CirclePositions))
+	server.game.Players = append(server.game.Players, gameConfig.CreatorGameId)
+	// fmt.Println("ball speed")
+	// fmt.Println(server.game.GameConfigI.BallSpeed)
+	// fmt.Println("ball number")
+	// fmt.Println(server.game.GameConfigI.BallNumber)
+	// fmt.Println(len(server.game.CirclePositions))
 }
 
 func (server *Server) missingPlayerGame() {
@@ -140,7 +144,7 @@ func (server *Server) finishGame() {
 func (server *Server) initGame() {
 	count := 0
 	for {
-        fmt.Println(count)
+		fmt.Println(count)
 		if count > server.game.GameConfigI.BallNumber-1 {
 			break
 		}

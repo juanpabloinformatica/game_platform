@@ -74,6 +74,16 @@ table {
   padding: 5px;
   margin-bottom: 20px;
 }
+.wrapperCenter {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
 .submitButton, .gameButton, .form button {
   padding: 5px;
   background-color: grey;
@@ -195,6 +205,14 @@ table {
   height: 100vh;
   width: 100vw;
   font-size: 30px;
+}
+
+.buttonWrapper {
+  display: flex;
+  gap: 10px;
+}
+.buttonWrapper button {
+  width: 70px;
 }
 
 /*games styles*/

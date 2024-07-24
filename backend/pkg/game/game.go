@@ -13,21 +13,33 @@ type Circle struct {
 }
 
 type GameConfig struct {
-	BallNumber int     `json:"ballNumber"`
-	BallSpeed  float32 `json:"ballSpeed"`
+	BallNumber    int     `json:"ballNumber"`
+	BallSpeed     float32 `json:"ballSpeed"`
+	CreatorGameId int     `json:"creatorGameId"`
+	Id            int     `json:"id,omitempty"`
+}
+
+type Player struct {
+	PlayerId int `json:"playerId"`
 }
 
 type Game struct {
+	Id              int
 	Width           int `json:"width"`
 	Height          int `json:"height"`
 	GameConfigI     *GameConfig
 	CirclePositions []*Circle
+	Players         []*Player
 	// I should add this part
 	// MissingPlayerMessage     string  `json:"missingPlayerMessage"`
 	// ResultMessage            string  `json:"resultMessage"`
 	// CircleInstance           *Circle `json:"circleMessage"`
 	// GameFinishMessage        string  `json:"gameFinishMessage"`
 	// BeforeStartSignalMessage string  `json:"beforeStartSignalMessage"`
+}
+
+func (game *Game) addPlayer(player *Player) {
+	game.Players = append(game.Players, player)
 }
 
 func NewGame(gameConfig *GameConfig) *Game {
