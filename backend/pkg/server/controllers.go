@@ -25,7 +25,7 @@ func handlerWs(writter http.ResponseWriter, request *http.Request) {
 	handleSocketConnection(conn, writter, request)
 }
 
-func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request) {
+func handleCreateReactionGame(writter http.ResponseWriter, request *http.Request) {
 	gameConfig := &game.GameConfig{}
 	body, err := ioutil.ReadAll(request.Body)
 	if err != nil {
@@ -36,6 +36,21 @@ func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request
 	}
 	json.Unmarshal(body, gameConfig)
 	server.setGame(gameConfig)
+}
+
+func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) {
+	joinGame := &game.JoinGame{}
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		panic(err.Error())
+	}
+	if len(body) <= 0 {
+		panic(errors.New("empty body"))
+	}
+	json.Unmarshal(body, joinGame)
+	fmt.Println(joinGame)
+	server.game.AddPlayer(joinGame.PlayerId)
+	// server.addClient()
 }
 
 func getClientId(request *http.Request) string {
@@ -65,6 +80,7 @@ func hearMessage(client *Client) {
 		fmt.Println(string(p))
 		if string(p) == "ready" {
 			server.clientsReady += 1
+			// server.game.PlayerReady += 1
 		} else {
 			client.counter += 1
 		}

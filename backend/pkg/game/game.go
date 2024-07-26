@@ -2,6 +2,8 @@ package game
 
 import (
 	"math"
+
+	"github.com/gorilla/websocket"
 )
 
 type Circle struct {
@@ -15,6 +17,18 @@ type Circle struct {
 type GameConfig struct {
 	BallNumber int     `json:"ballNumber"`
 	BallSpeed  float32 `json:"ballSpeed"`
+	CreatorGameId int     `json:"creatorGameId"`
+	Id            int     `json:"id,omitempty"`
+}
+type JoinGame struct {
+	PlayerId *Player `json:"playerId"`
+	RoomId   string  `json:"roomId"`
+}
+
+type Player struct {
+	PlayerId   int `json:"playerId"`
+	Counter    int `json:"counter,omitempty"`
+	Connection *websocket.Conn
 }
 
 type Game struct {
@@ -22,12 +36,18 @@ type Game struct {
 	Height          int `json:"height"`
 	GameConfigI     *GameConfig
 	CirclePositions []*Circle
+	Players         []*Player
+	PlayerReady     int
 	// I should add this part
 	// MissingPlayerMessage     string  `json:"missingPlayerMessage"`
 	// ResultMessage            string  `json:"resultMessage"`
 	// CircleInstance           *Circle `json:"circleMessage"`
 	// GameFinishMessage        string  `json:"gameFinishMessage"`
 	// BeforeStartSignalMessage string  `json:"beforeStartSignalMessage"`
+}
+
+func (game *Game) AddPlayer(player *Player) {
+	game.Players = append(game.Players, player)
 }
 
 func NewGame(gameConfig *GameConfig) *Game {

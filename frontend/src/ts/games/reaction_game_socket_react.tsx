@@ -3,6 +3,8 @@ import { Circle, Point } from "./reaction_game_types.ts";
 import { pointInCircle } from "./reaction_game_utils.ts";
 // let SERVER_SOCKET_ENDPOINT = "ws://localhost:7777/ws";
 let SOCKET: WebSocket | null = null
+// change all of this buggy code
+let flag = 0
 const HEIGHT = 500;
 const WIDTH = 500;
 // let correctClicks = 0;
@@ -29,21 +31,21 @@ function removeEventListener(canvas: HTMLCanvasElement) {
         canvas.removeEventListener("click", listener, true);
     }
 }
-function getClickListener(e: Event, selectedCircle: Circle, socket: WebSocket) {
+function getClickListener(e: Event, selectedCircle: Circle) {
     let mouseX = getRelativeCoords(e).x;
     let mouseY = getRelativeCoords(e).y;
     let point: Point = { x: mouseX, y: mouseY };
     if (pointInCircle(point, selectedCircle)) {
-        socket.send("");
+        SOCKET!.send("");
     }
 }
 function assignEventListener(
     canvas: HTMLCanvasElement,
     selectedCircle: Circle,
-    socket: WebSocket,
+    // socket: WebSocket,
 ) {
     listener = (e: Event) => {
-        getClickListener(e, selectedCircle, socket);
+        getClickListener(e, selectedCircle);
     };
     canvas.addEventListener("click", listener, true);
 }
@@ -101,14 +103,14 @@ function createCircle(circle: Circle) {
 }
 function handleCircles(
     canvas: HTMLCanvasElement,
-    socket: WebSocket,
+    // socket: WebSocket,
     receivedCircle: Circle,
 ) {
     cleanCanvas(canvas);
     removeEventListener(canvas);
     let circle = createCircle(receivedCircle);
     drawRandomCircle(canvas, circle);
-    assignEventListener(canvas, circle, socket);
+    assignEventListener(canvas, circle);
 }
 // function beforeStart
 function drawCounter(canvas: HTMLCanvasElement, counter: number) {
@@ -132,9 +134,12 @@ function generateBeforeStartSignal(
         counter += 1;
     }, 1000);
 }
-function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket, result: HTMLDivElement): void {
-    if (socket) {
-        socket.addEventListener("message", async (e) => {
+function handleMessages(canvas: HTMLCanvasElement, result: HTMLDivElement): void {
+    console.log(SOCKET)
+    console.log("entre acaaaaaaa")
+    if (SOCKET) {
+        console.log("entre acaaaaaaa")
+        SOCKET.addEventListener("message", async (e) => {
             let message = JSON.parse(e.data);
             if (message) {
                 if (message.missingPlayerMessage) {
@@ -144,7 +149,7 @@ function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket, result: HT
                     // sleep for waiting signal setInterval
                     await new Promise((r) => setTimeout(r, 3000));
                 } else if (message.circleMessage) {
-                    handleCircles(canvas, socket, message.circleMessage);
+                    handleCircles(canvas, SOCKET, message.circleMessage);
                     console.log(message.circleMessage);
                 } else if (message.resultMessage) {
                     console.log(message.resultMessage);
@@ -156,28 +161,32 @@ function handleMessages(canvas: HTMLCanvasElement, socket: WebSocket, result: HT
         });
     }
 }
-function setButton(button: HTMLButtonElement, socket: WebSocket) {
+function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result: HTMLDivElement) {
     console.log("inside setButton")
-    console.log(socket)
     buttonListener = () => {
+        if (!SOCKET) {
+            let socketConnection = setSocketConnection()
+            SOCKET = initHttpUpgradeRequest(socketConnection)
+            console.log(SOCKET)
+        }
         console.log("he dado click")
-        if (socket) {
-            socket.send("ready")
+        if (SOCKET) {
+            SOCKET!.addEventListener("open", (e) => {
+                SOCKET!.send("ready")
+            })
+            if (flag == 0) {
+                handleMessages(canvas, result)
+                flag += 1
+            }
         }
     };
     button.addEventListener("click", buttonListener);
 }
-function setGameConfig(ballSpeed,ballNumber,width,height){
-
-}
 function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement) {
     if (canvas && result) {
-        if (!SOCKET) {
-            let socketConnection = setSocketConnection()
-            SOCKET = initHttpUpgradeRequest(socketConnection)
-        }
-        setButton(button, SOCKET!);
-        handleMessages(canvas, SOCKET!, result)
+        // setButton(button, SOCKET!);
+        setButton(button, canvas, result);
+        // handleMessages(canvas, result)
     }
 }
 

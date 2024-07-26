@@ -47,6 +47,7 @@ func (server *Server) setGame(gameConfig *game.GameConfig) {
 	fmt.Println("ball number")
 	fmt.Println(server.game.GameConfigI.BallNumber)
 	fmt.Println(len(server.game.CirclePositions))
+	server.game.Players = append(server.game.Players, &game.Player{PlayerId: gameConfig.Id})
 }
 
 func (server *Server) missingPlayerGame() {
@@ -66,6 +67,11 @@ func (server *Server) sendBeforeStartSignal() {
 }
 
 func (server *Server) readyToPlay() bool {
+	// for {
+	// 	if server.game.PlayerReady == len(server.game.Players) {
+	// 		return true
+	// 	}
+	// }
 	for {
 		if server.clientsReady == len(server.clients) {
 			return true
@@ -95,11 +101,16 @@ func (server *Server) resetGame() {
 	for _, client := range server.clients {
 		client.counter = 0
 	}
+	// for _, client := range server.game.Players {
+	// 	client.Counter = 0
+	// }
 	server.clientsReady = 0
+	// server.game.PlayerReady = 0
 }
 
 func (server *Server) gameIsReady() bool {
-	fmt.Println(len(server.clients))
+	// fmt.Println(len(server.clients))
+	// return len(server.game.Players) == 2
 	return len(server.clients) == 2
 }
 
@@ -140,7 +151,7 @@ func (server *Server) finishGame() {
 func (server *Server) initGame() {
 	count := 0
 	for {
-        fmt.Println(count)
+		fmt.Println(count)
 		if count > server.game.GameConfigI.BallNumber-1 {
 			break
 		}
