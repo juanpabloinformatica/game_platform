@@ -6,6 +6,7 @@ import { isAuthenticated, setUser } from '../redux/features/auth/authSlice';
 import useAcessState from '../hooks/pages/login/accessState';
 import { jwtDecode } from 'jwt-decode'
 import Footer from '../components/Footer';
+import Cookies from "js-cookie"
 
 function LoginForm() {
     const navigate = useNavigate()
@@ -18,7 +19,15 @@ function LoginForm() {
             const response = await sendLogin(username, password)
             console.log("before dispatch")
             console.log(isAuth)
-            if (response.accessToken) {
+            // if (response.accessToken) {
+            //     dispatch(isAuthenticated(true))
+            //     let decoded = jwtDecode(response.accessToken)
+            //     dispatch(setUser(decoded.userId))
+            //     navigate("/userhome")
+            // }
+            let cookie = Cookies.get("token")
+            console.log(cookie)
+            if (cookie) {
                 dispatch(isAuthenticated(true))
                 let decoded = jwtDecode(response.accessToken)
                 dispatch(setUser(decoded.userId))

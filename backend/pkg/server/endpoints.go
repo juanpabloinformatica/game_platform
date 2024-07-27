@@ -8,7 +8,7 @@ func setMux(mux *http.ServeMux) {
 	mux.HandleFunc("/", handler)
 	mux.HandleFunc("/ws", handlerWs)
 	mux.HandleFunc("/createreactiongame", handleCreateReactionGame)
-    mux handleFucn("/joinreactiongame",handlehandleJoinReactionGame)
+	mux.HandleFunc("/createreactiongame", handleCreateReactionGame)
 }
 
 func NewMux() *http.ServeMux {

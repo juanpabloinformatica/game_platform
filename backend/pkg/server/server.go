@@ -46,11 +46,6 @@ func (server *Server) setGame(gameConfig *game.GameConfig) {
 	server.game = game.NewGame(gameConfig)
 	server.game.SetCirclePositions()
 	server.game.Players = append(server.game.Players, gameConfig.CreatorGameId)
-	// fmt.Println("ball speed")
-	// fmt.Println(server.game.GameConfigI.BallSpeed)
-	// fmt.Println("ball number")
-	// fmt.Println(server.game.GameConfigI.BallNumber)
-	// fmt.Println(len(server.game.CirclePositions))
 }
 
 func (server *Server) missingPlayerGame() {
