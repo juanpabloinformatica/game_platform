@@ -1,21 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/styles.css"
-// import { useDispatch, useSelector } from "react-redux";
-import { useSelector } from "react-redux";
-// import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { isAuthenticated } from "../redux/features/auth/authSlice";
+import { AppDispatch, RootState } from "../redux/store";
 
-
-function CustomNavbar() {
-    // const [user, setUser] = useState("guess")
-    const isAuth = useSelector(state => state.auth.isAuth)
-    // const dispatch = useDispatch()
-    // const handleNavbar() => {
-    //     if (isAuth == true){
-    //         setUser("user")
-    //     }
-    // }
+function CustomNavbar(): React.ReactElement {
+    const isAuth = useSelector<RootState>(state => state.auth.isAuth)
+    const dispatch = useDispatch<AppDispatch>()
+    const navigate = useNavigate()
+    const handleLogout = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        dispatch(isAuthenticated(false))
+        navigate("/")
+    }
     return (<> {!isAuth ?
-
         <div className="navbarWrapper">
             <NavLink className="navLink" to="/">Home</NavLink>
             <NavLink className="navLink" to="/login">Login</NavLink>
@@ -25,6 +23,7 @@ function CustomNavbar() {
         <div className="navbarWrapper">
             <NavLink className="navLink" to="/userhome">Home</NavLink>
             <NavLink className="navLink" to="/games">Games</NavLink>
+            <button className="logout" onClick={handleLogout}>Logout</button>
         </div>
     }
 

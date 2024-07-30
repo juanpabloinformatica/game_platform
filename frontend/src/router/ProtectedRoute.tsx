@@ -1,30 +1,18 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"
-import { handleToken } from "../services/protectedRoutes/protectedRouteServices";
-import { useIdle } from "@uidotdev/usehooks";
+import { RootState } from "../redux/store";
+// import Cookies from "js-cookie"
+// import { handleToken } from "../services/protectedRoutes/protectedRouteServices";
 
 function ProtectedRoute() {
-    const dispatch = useDispatch()
-    const userId = useSelector(state => state.auth.user)
-    const idle = useIdle(3600 * 1000)
+    // const userId = useSelector<RootState>(state => state.auth.user)
     const navigate = useNavigate()
-    const isAuth = useSelector((state) => state.auth.isAuth)
-    // useEffect(() => {
-    //     dispatch()
-    // }, [idle])
+    const isAuth = useSelector<RootState>((state) => state.auth.isAuth)
     useEffect(() => {
-
-        async function handler() {
-            console.log(userId)
-            console.log(userId)
-            if (await handleToken(true, userId) == false) {
-                console.log("not authorized")
-                navigate("/notAuthorized")
-            }
+        if (isAuth == false) {
+            navigate("/notAuthorized")
         }
-        handler()
     })
     return (<Outlet />)
 }

@@ -1,26 +1,17 @@
 import { getRelativeCoords, initHttpUpgradeRequest, setSocketConnection } from "../utils";
 import { Circle, Point } from "./reaction_game_types.ts";
 import { pointInCircle } from "./reaction_game_utils.ts";
-// let SERVER_SOCKET_ENDPOINT = "ws://localhost:7777/ws";
 let SOCKET: WebSocket | null = null
 const HEIGHT = 500;
 const WIDTH = 500;
-// let correctClicks = 0;
 function cleanCanvas(canvas: HTMLCanvasElement) {
     let context = canvas.getContext("2d");
     context?.clearRect(0, 0, canvas.width, canvas.height);
 }
-
-// function setGameConfig(ballSpeed:number,ballNumber:number){
-//
-// }
 function setCanvas(canvas: HTMLCanvasElement) {
     if (canvas) {
-        // canvas.width = width;
-        // canvas.height = height;
         canvas.width = WIDTH;
         canvas.height = HEIGHT;
-
     }
 }
 let listener: (e: Event) => void;
@@ -51,20 +42,22 @@ function assignEventListener(
 function drawRandomCircle(canvas: HTMLCanvasElement, selectedCircle: Circle) {
     if (canvas) {
         let context = canvas.getContext("2d");
-        context.beginPath();
-        context.arc(
-            selectedCircle.posX,
-            selectedCircle.posY,
-            selectedCircle.r,
-            selectedCircle.sAngle,
-            selectedCircle.endAngle,
-        );
-        context.fillStyle = "black";
-        context.fill();
-        context.stroke();
+        if (context) {
+            context.beginPath();
+            context.arc(
+                selectedCircle.posX,
+                selectedCircle.posY,
+                selectedCircle.r,
+                selectedCircle.sAngle,
+                selectedCircle.endAngle,
+            );
+            context.fillStyle = "black";
+            context.fill();
+            context.stroke();
+        }
     }
 }
-function ResultMessageSetup(resultDiv, message: string): void {
+function ResultMessageSetup(resultDiv: HTMLDivElement, message: string): void {
     // let resultDiv = document.querySelector<HTMLDivElement>(".result");
     if (resultDiv) {
         resultDiv.style.display = "flex";
@@ -72,23 +65,13 @@ function ResultMessageSetup(resultDiv, message: string): void {
         console.log(resultDiv.style);
     }
 }
-function hideResult(resultDiv) {
+function hideResult(resultDiv: HTMLDivElement) {
     // let resultDiv = document.querySelector<HTMLDivElement>(".result");
     if (resultDiv) {
         resultDiv.style.display = "none";
     }
 }
-// This funciton is created because if later we want to delete
-// the listener we would need it
 let buttonListener: () => void;
-// function initHttpUpgradeRequest(): WebSocket | null {
-//     let socket: WebSocket | null = null;
-//     if (window["WebSocket"]) {
-//         socket = new WebSocket(SERVER_SOCKET_ENDPOINT);
-//     }
-//     return socket;
-// }
-//
 function createCircle(circle: Circle) {
     let newCircle: Circle = {
         posX: circle.posX,
@@ -166,9 +149,6 @@ function setButton(button: HTMLButtonElement, socket: WebSocket) {
         }
     };
     button.addEventListener("click", buttonListener);
-}
-function setGameConfig(ballSpeed,ballNumber,width,height){
-
 }
 function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement) {
     if (canvas && result) {

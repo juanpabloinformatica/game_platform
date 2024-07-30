@@ -1,25 +1,23 @@
-import { useEffect, useRef } from "react";
 import "../styles/styles.css"
+import { useEffect, useRef } from "react";
 import CustomNavbar from "../components/Navbar";
-// import Footer from "../components/Footer";
-import { init, setCanvas } from "../ts/games/reaction_game_socket_react";
-import { initHttpUpgradeRequest, setSocketConnection } from "../ts/utils";
+import {init, setCanvas } from "../ts/games/reaction_game_socket_react";
 import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 function ReactionGame() {
-    const ballSpeed = useSelector(state => state.reactionGame.ballSpeed)
-    const ballNumber = useSelector(state => state.reactionGame.ballNumber)
+    const modality = useSelector<RootState>(state => state.games.modality)
     let canvasRef = useRef(null);
     let buttonRef = useRef(null);
     let resultRef = useRef(null);
-    // const [websocket, setWebsocket] = useState(null)
     useEffect(() => {
-        // console.log(ballSpeed)
-        // console.log(ballNumber)
         let canvas = canvasRef.current;
         setCanvas(canvas!)
-        // setGameConfig()
-        init(canvasRef.current!, buttonRef.current!, resultRef.current!)
+        if (modality) {
+            init(canvasRef.current!, buttonRef.current!, resultRef.current!)
+        } else {
+            // initOnePlayer(canvasRef.current!, buttonRef.current!, resultRef.current!)
+        }
     }, [])
     return (<>
         <CustomNavbar />

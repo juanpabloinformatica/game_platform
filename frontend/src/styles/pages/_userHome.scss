@@ -1,0 +1,5 @@
+/* backgroundColor: "crimson", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" */
+.userHomeWrapper {
+    @extend .wrapperCenter;
+    background-color: green;
+}

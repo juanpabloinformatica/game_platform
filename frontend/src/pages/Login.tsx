@@ -1,33 +1,23 @@
 import CustomNavbar from '../components/Navbar';
 import { useNavigate } from "react-router-dom";
 import { sendLogin } from '../services/login/loginServices';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { isAuthenticated, setUser } from '../redux/features/auth/authSlice';
 import useAcessState from '../hooks/pages/login/accessState';
 import { jwtDecode } from 'jwt-decode'
 import Footer from '../components/Footer';
-import Cookies from "js-cookie"
+import { AppDispatch } from '../redux/store';
 
 function LoginForm() {
     const navigate = useNavigate()
-    const isAuth = useSelector((state) => state.auth.isAuth)
-    const dispatch = useDispatch()
+    // const isAuth = useSelector<RootState>((state) => state.auth.isAuth)
+    const dispatch = useDispatch<AppDispatch>()
     const { username, setUsername, password, setPassword } = useAcessState()
-    const handleSubmit = async (event: Event) => {
+    const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         try {
             const response = await sendLogin(username, password)
-            console.log("before dispatch")
-            console.log(isAuth)
-            // if (response.accessToken) {
-            //     dispatch(isAuthenticated(true))
-            //     let decoded = jwtDecode(response.accessToken)
-            //     dispatch(setUser(decoded.userId))
-            //     navigate("/userhome")
-            // }
-            let cookie = Cookies.get("token")
-            console.log(cookie)
-            if (cookie) {
+            if (response.accessToken) {
                 dispatch(isAuthenticated(true))
                 let decoded = jwtDecode(response.accessToken)
                 dispatch(setUser(decoded.userId))
@@ -60,7 +50,6 @@ function LoginForm() {
                 </button>
             </form>
         </div>
-
     </>)
 }
 function LoginPage() {

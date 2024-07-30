@@ -17,7 +17,7 @@ function Page() {
         <>
             <CustomNavbar />
             <HomeBody />
-            <Footer/>
+            <Footer />
         </>
     );
 }

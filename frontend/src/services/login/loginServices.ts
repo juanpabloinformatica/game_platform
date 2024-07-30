@@ -1,24 +1,19 @@
+import { axiosClient } from "../../axios/axiosClient";
 async function sendLogin(username: string, password: string) {
-    if (username != "" && password != "") {
-        try {
-            const response = await fetch("http://localhost:3000/login", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({ username: username, password: password }),
-            });
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
-            const json = await response.json();
-            return json;
-        } catch (error) {
-            throw new Error(`${error}`);
-        }
+  if (username != "" && password != "") {
+    console.log("here from using axios");
+    try {
+      const response = await axiosClient.post(
+        "/login",
+        JSON.stringify({ username: username, password: password }),
+      );
+      if (!response.data) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      return response.data;
+    } catch (error) {
+      throw new Error(`${error}`);
     }
+  }
 }
-
 export { sendLogin };

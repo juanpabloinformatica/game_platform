@@ -12,6 +12,4 @@ function GamesPage() {
         <Footer />
     </>)
 }
-
-
 export default GamesPage;

@@ -2,7 +2,7 @@ import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
   isAuth: false,
-  user: null,
+  user: -1,
 };
 const authSlice = createSlice({
   name: "auth",
@@ -11,11 +11,9 @@ const authSlice = createSlice({
     isAuthenticated(state, action) {
       console.log("before action.payload");
       console.log(current(state));
-      if (action.payload == true) {
-        state.isAuth = true;
-        console.log("after action.payload");
-        console.log(current(state));
-      }
+      state.isAuth = action.payload;
+      console.log("after action.payload");
+      console.log(current(state));
     },
     setUser(state, action) {
       console.log("before action.payload");
@@ -26,5 +24,5 @@ const authSlice = createSlice({
     },
   },
 });
-export const { isAuthenticated,setUser } = authSlice.actions;
+export const { isAuthenticated, setUser } = authSlice.actions;
 export default authSlice.reducer;

@@ -54,6 +54,10 @@ async function sendGenerateAccessToken(userId) {
     console.log("error at validating accessToken");
   }
 }
+function removeToken(){
+    
+}
+
 async function handleToken(idle = false, userId) {
   try {
     let token = getCookieToken();

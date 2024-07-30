@@ -10,6 +10,7 @@ import NotAuthorized from '../pages/NotAuthorized';
 import ReactionGame from '../games/ReactionGame';
 import UserHome from '../pages/UserHome';
 import ReactionGameConfig from '../pages/ReactionGameConfig';
+import { GameModality } from '../pages/GameModality';
 const router = createBrowserRouter([{
 
     path: "/",
@@ -27,9 +28,7 @@ const router = createBrowserRouter([{
         {
             path: "/games", element: <GamesPage />
         },
-        {
-            path: "/reactiongame", element: <ReactionGame />
-        },
+        { path: "/reactiongame", element: <ReactionGame /> }
     ]
 },
 {

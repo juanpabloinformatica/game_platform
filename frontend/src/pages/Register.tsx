@@ -7,13 +7,15 @@ import { sendRegistration } from "../services/register/registerServices";
 import Footer from "../components/Footer";
 
 function RegisgterForm() {
-    const navigate = useNavigate()
     const { username, setUsername, password, setPassword, confirmPassword, setConfirmPassword } = useRegisterState()
-    const handleSubmit = async (event: Event) => {
+    const navigate = useNavigate()
+    const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         try {
             const response = await sendRegistration(username, password, confirmPassword);
-            navigate("/login")
+            if (response) {
+                navigate("/login")
+            }
         } catch (error) {
             console.log(error)
         }
