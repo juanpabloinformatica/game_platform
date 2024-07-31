@@ -15,8 +15,8 @@ type Circle struct {
 }
 
 type GameConfig struct {
-	BallNumber int     `json:"ballNumber"`
-	BallSpeed  float32 `json:"ballSpeed"`
+	BallNumber    int     `json:"ballNumber"`
+	BallSpeed     float32 `json:"ballSpeed"`
 	CreatorGameId int     `json:"creatorGameId"`
 	Id            int     `json:"id,omitempty"`
 }
@@ -26,12 +26,21 @@ type JoinGame struct {
 }
 
 type Player struct {
-	PlayerId   int `json:"playerId"`
-	Counter    int `json:"counter,omitempty"`
-	Connection *websocket.Conn
+	PlayerId      int `json:"playerId"`
+	Counter       int `json:"counter,omitempty"`
+	Connection    *websocket.Conn
+	BallNumber    int     `json:"ballNumber"`
+	BallSpeed     float32 `json:"ballSpeed"`
+	CreatorGameId int     `json:"creatorGameId"`
+	Id            int     `json:"id,omitempty"`
+}
+
+type Player struct {
+	PlayerId int `json:"playerId"`
 }
 
 type Game struct {
+	Id              int
 	Width           int `json:"width"`
 	Height          int `json:"height"`
 	GameConfigI     *GameConfig
@@ -57,11 +66,6 @@ func NewGame(gameConfig *GameConfig) *Game {
 		GameConfigI: gameConfig,
 	}
 }
-
-// type GameConfig struct {
-// 	BallNumber float32
-// 	BallSpeed  int
-// }
 
 type Point struct {
 	x int
@@ -100,7 +104,3 @@ func (game *Game) GetCircle() *Circle {
 	selectedCircle := game.CirclePositions[randomIndex]
 	return selectedCircle
 }
-
-// func Init() {
-// 	setCirclePositions()
-// }

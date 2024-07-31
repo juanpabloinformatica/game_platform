@@ -33,6 +33,7 @@ type (
 var (
 	server   *Server
 	clientId = 0
+	gameId   = 0
 )
 
 func (server *Server) newClient(connection *websocket.Conn, clientId string) *Client {
@@ -40,6 +41,8 @@ func (server *Server) newClient(connection *websocket.Conn, clientId string) *Cl
 }
 
 func (server *Server) setGame(gameConfig *game.GameConfig) {
+	gameConfig.Id = gameId
+	gameId++
 	server.game = game.NewGame(gameConfig)
 	server.game.SetCirclePositions()
 	fmt.Println("ball speed")

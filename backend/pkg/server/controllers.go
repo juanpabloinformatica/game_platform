@@ -49,7 +49,7 @@ func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) 
 	}
 	json.Unmarshal(body, joinGame)
 	fmt.Println(joinGame)
-	server.game.AddPlayer(joinGame.PlayerId)
+	// server.game.AddPlayer(joinGame.PlayerId)
 	// server.addClient()
 }
 

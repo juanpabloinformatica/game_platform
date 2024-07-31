@@ -1,11 +1,10 @@
 import CustomNavbar from "../components/Navbar";
-
+import "../styles/styles.css"
 function UserHome() {
 
     return (<>
-
         <CustomNavbar />
-        <div style={{ backgroundColor: "crimson", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div className="userHomeWrapper">
             hola tu pronto pondre tu nombre
         </div>
     </>)

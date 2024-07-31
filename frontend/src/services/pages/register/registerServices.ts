@@ -1,3 +1,5 @@
+import { axiosAuthClient } from "../../../axios/axiosClients";
+
 async function sendRegistration(
     username: string,
     password: string,
@@ -5,23 +7,18 @@ async function sendRegistration(
 ) {
     if (username != "" && password != "" && confirmPassword != "") {
         try {
-            const response = await fetch("http://localhost:3000/register", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+            const response = await axiosAuthClient.post(
+                "/register",
+                JSON.stringify({
                     username: username,
                     password: password,
                     confirmPassword: confirmPassword,
                 }),
-            });
-            if (!response.ok) {
+            );
+            if (!response.data) {
                 throw new Error(`Response status: ${response.status}`);
             }
-            const json = await response.json();
-            return json;
+            return response.data;
         } catch (error) {
             throw new Error(`${error}`);
         }

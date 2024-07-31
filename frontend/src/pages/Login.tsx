@@ -1,24 +1,26 @@
 import CustomNavbar from '../components/Navbar';
 import { useNavigate } from "react-router-dom";
-import { sendLogin } from '../services/login/loginServices';
-import { useDispatch, useSelector } from 'react-redux';
-import { isAuthenticated } from '../redux/features/auth/authSlice';
+import { useDispatch } from 'react-redux';
+import { isAuthenticated, setUser } from '../redux/features/auth/authSlice';
 import useAcessState from '../hooks/pages/login/accessState';
+import { jwtDecode } from 'jwt-decode'
 import Footer from '../components/Footer';
+import { AppDispatch } from '../redux/store';
+import { sendLogin } from '../services/pages/login/loginServices';
 
 function LoginForm() {
     const navigate = useNavigate()
-    const isAuth = useSelector((state) => state.auth.isAuth)
-    const dispatch = useDispatch()
+    // const isAuth = useSelector<RootState>((state) => state.auth.isAuth)
+    const dispatch = useDispatch<AppDispatch>()
     const { username, setUsername, password, setPassword } = useAcessState()
-    const handleSubmit = async (event: Event) => {
+    const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         try {
             const response = await sendLogin(username, password)
-            console.log("before dispatch")
-            console.log(isAuth)
             if (response.accessToken) {
                 dispatch(isAuthenticated(true))
+                let decoded = jwtDecode(response.accessToken)
+                dispatch(setUser(decoded.userId))
                 navigate("/userhome")
             }
             console.log(response)
@@ -27,7 +29,7 @@ function LoginForm() {
         }
     }
     return (<>
-        <div className="loginWrapper">
+        <div className="wrapperCenter">
             <form onSubmit={handleSubmit} className="form">
                 <label>Username</label>
                 <input
@@ -48,14 +50,13 @@ function LoginForm() {
                 </button>
             </form>
         </div>
-
     </>)
 }
 function LoginPage() {
     return (<>
         <CustomNavbar />
         <LoginForm />
-        <Footer/>
+        <Footer />
     </>)
 }
 export default LoginPage;
