@@ -1,4 +1,4 @@
-import { getRelativeCoords, initHttpUpgradeRequest, setSocketConnection } from "../utils";
+import { getRelativeCoords, initHttpUpgradeRequest, setSocketConnection } from "../../utils.ts";
 import { Circle, Point } from "./reaction_game_types.ts";
 import { pointInCircle } from "./reaction_game_utils.ts";
 let SOCKET: WebSocket | null = null

@@ -1,23 +1,18 @@
-import "../styles/styles.css"
+import "../../styles/styles.css"
 import { useEffect, useRef } from "react";
-import CustomNavbar from "../components/Navbar";
-import {init, setCanvas } from "../ts/games/reaction_game_socket_react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import CustomNavbar from "../../components/Navbar";
+import { init, setCanvas } from "./logic/reaction_game_socket_react";
 
 function ReactionGame() {
-    const modality = useSelector<RootState>(state => state.games.modality)
+
+    // const modality = useSelector<RootState>(state => state.games.modality)
     let canvasRef = useRef(null);
     let buttonRef = useRef(null);
     let resultRef = useRef(null);
     useEffect(() => {
         let canvas = canvasRef.current;
         setCanvas(canvas!)
-        if (modality) {
-            init(canvasRef.current!, buttonRef.current!, resultRef.current!)
-        } else {
-            // initOnePlayer(canvasRef.current!, buttonRef.current!, resultRef.current!)
-        }
+        init(canvasRef.current!, buttonRef.current!, resultRef.current!)
     }, [])
     return (<>
         <CustomNavbar />

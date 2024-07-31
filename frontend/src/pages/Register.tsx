@@ -1,10 +1,9 @@
 
 import CustomNavbar from "../components/Navbar";
-import { useState } from "react";
 import useRegisterState from "../hooks/pages/register/registerState";
 import { useNavigate } from "react-router-dom";
-import { sendRegistration } from "../services/register/registerServices";
 import Footer from "../components/Footer";
+import { sendRegistration } from "../services/pages/register/registerServices";
 
 function RegisgterForm() {
     const { username, setUsername, password, setPassword, confirmPassword, setConfirmPassword } = useRegisterState()

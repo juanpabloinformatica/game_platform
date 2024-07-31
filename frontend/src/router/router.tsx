@@ -1,16 +1,13 @@
-
 import { createBrowserRouter } from 'react-router-dom'
 import Page from '../pages/Home';
 import LoginPage from '../pages/Login';
 import RegisterPage from '../pages/Register';
 import GamesPage from '../pages/Games'
-// import ReactionGame from '../games/ReactionGame';
 import ProtectedRoute from './ProtectedRoute';
 import NotAuthorized from '../pages/NotAuthorized';
-import ReactionGame from '../games/ReactionGame';
 import UserHome from '../pages/UserHome';
 import ReactionGameConfig from '../pages/ReactionGameConfig';
-import { GameModality } from '../pages/GameModality';
+import ReactionGame from '../games/reactionGame/ReactionGame';
 const router = createBrowserRouter([{
 
     path: "/",

@@ -1,12 +1,12 @@
 import CustomNavbar from '../components/Navbar';
 import { useNavigate } from "react-router-dom";
-import { sendLogin } from '../services/login/loginServices';
 import { useDispatch } from 'react-redux';
 import { isAuthenticated, setUser } from '../redux/features/auth/authSlice';
 import useAcessState from '../hooks/pages/login/accessState';
 import { jwtDecode } from 'jwt-decode'
 import Footer from '../components/Footer';
 import { AppDispatch } from '../redux/store';
+import { sendLogin } from '../services/pages/login/loginServices';
 
 function LoginForm() {
     const navigate = useNavigate()
