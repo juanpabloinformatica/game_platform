@@ -10,7 +10,11 @@ type Player struct {
 	PlayerId   int `json:"playerId"`
 	Connection *websocket.Conn
 }
-type GameLogic interface {
+type PlayGame struct {
+	PlayerId     int  `json:"playerId"`
+	GameModality bool `json:"gameModality"`
+}
+type Games interface {
 	handleGame()
 	resetGame()
 	addPlayer()
@@ -19,8 +23,8 @@ type GameLogic interface {
 type Game struct {
 	// GameConfig      *GameConfig
 	// CirclePositions []*Circle
-	Players  []*Player
-	modality bool
+	Players      []*Player
+	GameModality bool
 	// I should add this part
 	// MissingPlayerMessage     string  `json:"missingPlayerMessage"`
 	// ResultMessage            string  `json:"resultMessage"`
@@ -33,9 +37,21 @@ func (game *Game) AddPlayer(player *Player) {
 	game.Players = append(game.Players, player)
 }
 
-func NewGame(modality bool) *Game {
+func (game *Game) NewPlayer(playerId int, connection *websocket.Conn) *Player {
+	return &Player{
+		PlayerId: playerId,
+		// Connection: connection,
+	}
+}
+
+func (game *Game) SetPlayerConnection(playerId int, connection *websocket.Conn) {
+    game.Players[]
+}
+
+func NewGame(gameModality bool) *Game {
 	return &Game{
-		modality: modality,
+		GameModality: gameModality,
+		// Players:
 	}
 }
 

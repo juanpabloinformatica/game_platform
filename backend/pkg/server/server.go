@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/websocket"
 
 	"github.com/juanpabloinformatica/game_platform/pkg/game"
+	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
 
 type Client struct {
@@ -22,7 +23,8 @@ type (
 		httpServer *http.Server
 		upgrader   *websocket.Upgrader
 		clients    map[string]*Client
-		games      []*game.Game
+		// games      []*game.Game
+		games []*reactionGame.ReactionGame
 	}
 )
 

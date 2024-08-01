@@ -37,4 +37,27 @@ async function sendJoinReactionGame(playerId: number) {
     throw new Error(`${error}`);
   }
 }
-export { sendCreateReactionGame, sendJoinReactionGame };
+// here the client, will send a request to play the game, so in this case if this is push, the modality need
+// to be set to monoplayer, and the player needs to be passed to enregister his score
+async function sendPlayReactionGame(
+  gameConfig: any,
+  playerId: number,
+  gameModality: number,
+) {
+  try {
+    const body = JSON.stringify({
+      gameConfig: gameConfig,
+      userId: playerId,
+      gameModality: gameModality,
+    });
+    const response = await axiosGameCLient.post("/reactiongameplay", body);
+    if (!response.data) {
+      throw new Error("problem with response");
+    }
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { sendCreateReactionGame, sendJoinReactionGame, sendPlayReactionGame };

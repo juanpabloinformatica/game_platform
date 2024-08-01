@@ -25,15 +25,25 @@ type GameConfig struct {
 	Height     int     `json:"height,omitempty"`
 	Width      int     `json:"width,omitempty"`
 }
+type PlayGame struct {
+	GameConfig   *GameConfig `json:"gameConfig"`
+	PlayerId     int         `json:"playerId"`
+	GameModality bool        `json:"gameModality"`
+}
 
 type ReactionGame struct {
-	game            game.Game
+	game.Game
 	GameConfig      *GameConfig
 	CirclePositions []*Circle
 }
 
-func newReactionGame(game *game.Game) *ReactionGame {
-	return &ReactionGame{}
+func NewReactionGame(gameInstance *game.Game, gameConfig *GameConfig) *ReactionGame {
+	return &ReactionGame{
+		Game: game.Game{
+			GameModality: gameInstance.GameModality,
+		},
+		GameConfig: gameConfig,
+	}
 }
 
 func (reactionGame *ReactionGame) sendBeforeStartSignal() {
@@ -85,14 +95,14 @@ func (ReactionGame *ReactionGame) initGame() {
 	}
 }
 
-func (game *Game) missingPlayerGame() {
+func (reactionGame *ReactionGame) missingPlayerGame() {
 	// message := &game.MissingPlayerMessage{
 	// 	MissingPlayerMessage: "second player missing",
 	// }
 	// server.sendToClients(message)
 }
 
-func (game *Game) getResult() *Player {
+func (reactionGame *ReactionGame) getResult() *Player {
 	// winner := &Client{}
 	// max := -1
 	// id := ""
@@ -104,5 +114,8 @@ func (game *Game) getResult() *Player {
 	// }
 	// winner = server.clients[id]
 	// return winner
-	return &Player{}
+	return &game.Player{}
+}
+
+func (reactionGame *ReactionGame) handleGame() {
 }

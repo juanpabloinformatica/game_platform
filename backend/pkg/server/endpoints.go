@@ -9,6 +9,7 @@ func setMux(mux *http.ServeMux) {
 	mux.HandleFunc("/ws", handlerWs)
 	mux.HandleFunc("/createreactiongame", handleCreateReactionGame)
 	mux.HandleFunc("/joinreactiongame", handleJoinReactionGame)
+	mux.HandleFunc("/reactiongameplay", handlePlayReactionGame)
 }
 
 func NewMux() *http.ServeMux {

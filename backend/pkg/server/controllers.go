@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/websocket"
 
 	"github.com/juanpabloinformatica/game_platform/pkg/game"
+	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
 
 func handler(writter http.ResponseWriter, request *http.Request) {
@@ -51,6 +52,24 @@ func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) 
 	fmt.Println(joinGame)
 	// server.game.AddPlayer(joinGame.PlayerId)
 	// server.addClient()
+}
+
+func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request) {
+	playGame := &game.PlayGame{}
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		panic(err.Error())
+	}
+	if len(body) <= 0 {
+		panic(errors.New("empty body"))
+	}
+	json.Unmarshal(body, playGame)
+	game := game.NewGame(playGame.GameModality)
+	player := game.NewPlayer(playGame.PlayerId,)
+	game.AddPlayer(player)
+	reactionGame := reactionGame.NewReactionGame()
+	server.addGame(reactionGame)
+	// fmt.Println(joinGame)
 }
 
 func getClientId(request *http.Request) string {

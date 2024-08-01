@@ -1,6 +1,6 @@
 import { updateBallNumber, updateBallSpeed } from "../redux/features/games/reactionGame/reactionGameSlice";
 import { useNavigate } from "react-router-dom";
-import { sendCreateReactionGame, sendJoinReactionGame } from "../services/games/reactionGame/reactionGameServices";
+import { sendCreateReactionGame, sendJoinReactionGame, sendPlayReactionGame } from "../services/games/reactionGame/reactionGameServices";
 import CustomNavbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { setModality } from "../redux/features/games/gamesSlice";
@@ -56,6 +56,11 @@ function ReactionGameConfig() {
         e.preventDefault()
         setGameModality(true)
     }
+    const handlePlayButton = (e: React.MouseEvent) => {
+        e.preventDefault()
+        let gameConfig: { ballNumber: number, ballSpeed: number, height: number, width: number } = { ballNumber: parseInt(inputBallNumber), ballSpeed: parseFloat(inputBallSpeed), width: 500, height: 500 }
+        sendPlayReactionGame(gameConfig, playerId, gameModality)
+    }
     return (<>
 
         <CustomNavbar />
@@ -87,7 +92,7 @@ function ReactionGameConfig() {
                         <label>Ball number</label>
                         <input className="" type="number" step="1" value={inputBallNumber} onChange={(e) => setInputBallNumber(e.target.value)} ></input>
                         <div className="buttonWrapper">
-                            <button className="" onClick={handleCreateButton}> Join </button>
+                            <button className="" onClick={handlePlayButton}>Play</button>
                         </div>
                     </form>
             }
