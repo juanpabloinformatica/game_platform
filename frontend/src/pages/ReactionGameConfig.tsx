@@ -28,10 +28,10 @@ function ReactionGameConfig() {
     useReactionGameToggleModalityButton(onePlayer.current!, multiPlayer.current!, gameModality)
     const handleCreateButton = (e: React.MouseEvent) => {
         e.preventDefault()
-        dispatch(setModality(gameModality))
+        // dispatch(setModality(gameModality))
         if (inputBallSpeed != "" && inputBallNumber != "") {
-            dispatch(updateBallSpeed(parseFloat(inputBallSpeed)))
-            dispatch(updateBallNumber(parseInt(inputBallNumber)))
+            // dispatch(updateBallSpeed(parseFloat(inputBallSpeed)))
+            // dispatch(updateBallNumber(parseInt(inputBallNumber)))
             sendCreateReactionGame(parseFloat(inputBallSpeed), parseInt(inputBallNumber), playerId)
             navigate("/reactiongame")
         } else {
@@ -60,6 +60,7 @@ function ReactionGameConfig() {
         e.preventDefault()
         let gameConfig: { ballNumber: number, ballSpeed: number, height: number, width: number } = { ballNumber: parseInt(inputBallNumber), ballSpeed: parseFloat(inputBallSpeed), width: 500, height: 500 }
         sendPlayReactionGame(gameConfig, playerId, gameModality)
+        navigate("/reactiongame")
     }
     return (<>
 

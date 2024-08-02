@@ -7,7 +7,6 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"github.com/juanpabloinformatica/game_platform/pkg/game"
 	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
 
@@ -24,13 +23,13 @@ type (
 		upgrader   *websocket.Upgrader
 		clients    map[string]*Client
 		// games      []*game.Game
-		games []*reactionGame.ReactionGame
+		reactionGames []*reactionGame.ReactionGame
 	}
 )
 
 var server *Server
 
-func (server *Server) newClient(connection *websocket.Conn, clientId string) *Client {
+func (server *Server) newClient(connection *websocket.Conn, clientId int) *Client {
 	return &Client{connection: connection}
 }
 
@@ -50,8 +49,15 @@ func (server *Server) sendToClients(message interface{}) {
 	}
 }
 
-func (server *Server) addGame(game *game.Game) {
-	server.games = append(server.games, game)
+// this should be the correct one need to check polymorphism in greater detail in goolang
+// func (server *Server) AddGame(game *game.Game) {
+// 	server.games = append(server.games, game)
+// }
+
+// this should be the correct one need to check polymorphism in greater detail in goolang
+func (server *Server) AddGame(reactionGame *reactionGame.ReactionGame) {
+	server.games = append(server.games, reactionGame)
+	fmt.Println(*server.games[0])
 }
 
 func NewServer(capacity int, httpServer *http.Server, upgrader *websocket.Upgrader) *Server {
@@ -60,6 +66,7 @@ func NewServer(capacity int, httpServer *http.Server, upgrader *websocket.Upgrad
 		httpServer: httpServer,
 		upgrader:   upgrader,
 		clients:    make(map[string]*Client),
+		games:      make([]*reactionGame.ReactionGame, 0, 0),
 	}
 	server = newServer
 	return newServer

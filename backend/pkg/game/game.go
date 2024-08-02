@@ -1,7 +1,7 @@
 package game
 
 import (
-	"fmt"
+	// "fmt"
 
 	"github.com/gorilla/websocket"
 )
@@ -10,21 +10,22 @@ type Player struct {
 	PlayerId   int `json:"playerId"`
 	Connection *websocket.Conn
 }
+
 type PlayGame struct {
 	PlayerId     int  `json:"playerId"`
 	GameModality bool `json:"gameModality"`
 }
-type Games interface {
-	handleGame()
-	resetGame()
-	addPlayer()
-	readyToPlay()
-}
+// type Games interface {
+// 	handleGame()
+// 	resetGame()
+// 	addPlayer()
+// 	readyToPlay()
+// }
 type Game struct {
 	// GameConfig      *GameConfig
 	// CirclePositions []*Circle
-	Players      []*Player
-	GameModality bool
+	// Players      map[int]*Player
+	// GameModality bool
 	// I should add this part
 	// MissingPlayerMessage     string  `json:"missingPlayerMessage"`
 	// ResultMessage            string  `json:"resultMessage"`
@@ -33,27 +34,30 @@ type Game struct {
 	// BeforeStartSignalMessage string  `json:"beforeStartSignalMessage"`
 }
 
-func (game *Game) AddPlayer(player *Player) {
-	game.Players = append(game.Players, player)
-}
+// func (game *Game) AddPlayer(player *Player) {
+// 	game.Players[player.PlayerId] = player
+// }
+//
+// func (game *Game) NewPlayer(playerId int) *Player {
+// 	return &Player{
+// 		PlayerId: playerId,
+// 		// Connection: connection,
+// 	}
+// }
 
-func (game *Game) NewPlayer(playerId int, connection *websocket.Conn) *Player {
-	return &Player{
-		PlayerId: playerId,
-		// Connection: connection,
-	}
-}
-
-func (game *Game) SetPlayerConnection(playerId int, connection *websocket.Conn) {
-    game.Players[]
-}
-
-func NewGame(gameModality bool) *Game {
-	return &Game{
-		GameModality: gameModality,
-		// Players:
-	}
-}
+// func (game *Game) SetPlayerConnection(playerId int, connection *websocket.Conn) {
+// 	game.Players[playerId].Connection = connection
+// }
+//
+// func NewGame(gameModality bool, playerId int) *Game {
+// 	game := &Game{
+// 		GameModality: gameModality,
+// 		// Players:      make(map[int]*Player),
+// 	}
+// 	// player := game.NewPlayer(playerId)
+// 	// game.AddPlayer(player)
+// 	return game
+// }
 
 // type Point struct {
 // 	x int
@@ -102,63 +106,63 @@ func NewGame(gameModality bool) *Game {
 // 	// time.Sleep(4 * time.Second)
 // }
 
-func (game *Game) readyToPlay() bool {
-	// for {
-	// 	if server.game.PlayerReady == len(server.game.Players) {
-	// 		return true
-	// 	}
-	// }
-	// for {
-	// 	if server.clientsReady == len(server.clients) {
-	// 		return true
-	// 	}
-	// }
-	return true
-}
+// func (game *Game) readyToPlay() bool {
+// 	// for {
+// 	// 	if server.game.PlayerReady == len(server.game.Players) {
+// 	// 		return true
+// 	// 	}
+// 	// }
+// 	// for {
+// 	// 	if server.clientsReady == len(server.clients) {
+// 	// 		return true
+// 	// 	}
+// 	// }
+// 	return true
+// }
 
-func (game *Game) handleGame() {
-	// if server.gameIsReady() == false {
-	// 	server.missingPlayerGame()
-	// 	return
-	// }
-	// server.readyToPlay()
-	// // server.game is been writting twice that's the reason only a player can put the settings
-	// if server.game == nil {
-	// 	panic(errors.New("not game configuration yet"))
-	// }
-	// server.sendBeforeStartSignal()
-	// server.initGame()
-	// server.setResult()
-	// server.finishGame()
-	// server.resetGame()
-	// server.handleGame()
-}
+// func (game *Game) handleGame() {
+// 	// if server.gameIsReady() == false {
+// 	// 	server.missingPlayerGame()
+// 	// 	return
+// 	// }
+// 	// server.readyToPlay()
+// 	// // server.game is been writting twice that's the reason only a player can put the settings
+// 	// if server.game == nil {
+// 	// 	panic(errors.New("not game configuration yet"))
+// 	// }
+// 	// server.sendBeforeStartSignal()
+// 	// server.initGame()
+// 	// server.setResult()
+// 	// server.finishGame()
+// 	// server.resetGame()
+// 	// server.handleGame()
+// }
 
-func (game *Game) resetGame() {
-	// for _, client := range server.clients {
-	// 	client.counter = 0
-	// }
-	// // for _, client := range server.game.Players {
-	// // 	client.Counter = 0
-	// // }
-	// server.clientsReady = 0
-	// // server.game.PlayerReady = 0
-}
+// func (game *Game) resetGame() {
+// 	// for _, client := range server.clients {
+// 	// 	client.counter = 0
+// 	// }
+// 	// // for _, client := range server.game.Players {
+// 	// // 	client.Counter = 0
+// 	// // }
+// 	// server.clientsReady = 0
+// 	// // server.game.PlayerReady = 0
+// }
 
-func (game *Game) getResult() *Player {
-	// winner := &Client{}
-	// max := -1
-	// id := ""
-	// for clientId, client := range server.clients {
-	// 	if client.counter > max {
-	// 		max = client.counter
-	// 		id = clientId
-	// 	}
-	// }
-	// winner = server.clients[id]
-	// return winner
-	return &Player{}
-}
+// func (game *Game) getResult() *Player {
+// 	// winner := &Client{}
+// 	// max := -1
+// 	// id := ""
+// 	// for clientId, client := range server.clients {
+// 	// 	if client.counter > max {
+// 	// 		max = client.counter
+// 	// 		id = clientId
+// 	// 	}
+// 	// }
+// 	// winner = server.clients[id]
+// 	// return winner
+// 	return &Player{}
+// }
 
 // func (game *Game) missingPlayerGame() {
 // 	// message := &game.MissingPlayerMessage{
@@ -167,14 +171,14 @@ func (game *Game) getResult() *Player {
 // 	// server.sendToClients(message)
 // }
 
-func (game *Game) sendToPlayers(message interface{}) {
-	for _, player := range game.Players {
-		player.Connection.WriteJSON(message)
-	}
-}
-
-func (game *Game) ShowPlayers() {
-	for playerId, player := range game.Players {
-		fmt.Printf("client with id: %s and connection %+v", playerId, player.Connection)
-	}
-}
+// func (game *Game) sendToPlayers(message interface{}) {
+// 	for _, player := range game.Players {
+// 		player.Connection.WriteJSON(message)
+// 	}
+// }
+//
+// func (game *Game) ShowPlayers() {
+// 	for playerId, player := range game.Players {
+// 		fmt.Printf("client with id: %s and connection %+v", playerId, player.Connection)
+// 	}
+// }

@@ -15,3 +15,11 @@ type GameFinishMessage struct {
 type BeforeStartSignalMessage struct {
 	BeforeStartSignalMessage string `json:"beforeStartSignalMessage"`
 }
+
+type Circle struct {
+	PosX     int     `json:"posX"`
+	PosY     int     `json:"posY"`
+	R        int     `json:"r"`
+	SAngle   float32 `json:"sAngle"`
+	EndAngle float32 `json:"endAngle"`
+}

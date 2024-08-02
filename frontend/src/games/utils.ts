@@ -20,9 +20,9 @@ function initHttpUpgradeRequest(socketConnection: string): WebSocket | null {
   }
   return socket;
 }
-function setSocketConnection() {
-  let id = generateId().toString();
-  return "ws://localhost:7777/ws" + "?" + "token" + "=" + "string" + id;
+function setSocketConnection(playerId: number) {
+  // let id = generateId().toString();
+  return "ws://localhost:7777/ws" + "?" + "clientId" + "=" + "" + playerId;
 }
 export {
   randomInteger,

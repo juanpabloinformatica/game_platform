@@ -144,17 +144,17 @@ function handleMessages(canvas: HTMLCanvasElement, result: HTMLDivElement): void
         });
     }
 }
-function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result: HTMLDivElement) {
+function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result: HTMLDivElement, playerId: number) {
     console.log("inside setButton")
     buttonListener = () => {
         if (!SOCKET) {
-            let socketConnection = setSocketConnection()
+            let socketConnection = setSocketConnection(playerId)
             SOCKET = initHttpUpgradeRequest(socketConnection)
             console.log(SOCKET)
         }
         console.log("he dado click")
         if (SOCKET) {
-            SOCKET!.addEventListener("open", (e) => {
+            SOCKET!.addEventListener("open", (_) => {
                 SOCKET!.send("ready")
             })
             if (flag == 0) {
@@ -165,10 +165,10 @@ function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result:
     };
     button.addEventListener("click", buttonListener);
 }
-function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement) {
+function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement, playerId: number) {
     if (canvas && result) {
         // setButton(button, SOCKET!);
-        setButton(button, canvas, result);
+        setButton(button, canvas, result, playerId);
         // handleMessages(canvas, result)
     }
 }
