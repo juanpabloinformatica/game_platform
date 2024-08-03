@@ -18,6 +18,7 @@ function initHttpUpgradeRequest(socketConnection: string): WebSocket | null {
   if (window["WebSocket"]) {
     socket = new WebSocket(socketConnection);
   }
+  console.log(socket)
   return socket;
 }
 function setSocketConnection(playerId: number) {

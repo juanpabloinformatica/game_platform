@@ -148,6 +148,7 @@ function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result:
     console.log("inside setButton")
     buttonListener = () => {
         if (!SOCKET) {
+            console.log("entre cuando el socket no existe")
             let socketConnection = setSocketConnection(playerId)
             SOCKET = initHttpUpgradeRequest(socketConnection)
             console.log(SOCKET)
@@ -166,6 +167,7 @@ function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result:
     button.addEventListener("click", buttonListener);
 }
 function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement, playerId: number) {
+    console.log("here,jajajajajaja")
     if (canvas && result) {
         // setButton(button, SOCKET!);
         setButton(button, canvas, result, playerId);

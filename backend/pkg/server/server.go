@@ -11,7 +11,7 @@ import (
 )
 
 type Client struct {
-	id         string
+	id         int
 	connection *websocket.Conn
 }
 
@@ -21,7 +21,7 @@ type (
 		capacity   int
 		httpServer *http.Server
 		upgrader   *websocket.Upgrader
-		clients    map[string]*Client
+		clients    map[int]*Client
 		// games      []*game.Game
 		reactionGames []*reactionGame.ReactionGame
 	}
@@ -56,17 +56,20 @@ func (server *Server) sendToClients(message interface{}) {
 
 // this should be the correct one need to check polymorphism in greater detail in goolang
 func (server *Server) AddGame(reactionGame *reactionGame.ReactionGame) {
-	server.games = append(server.games, reactionGame)
-	fmt.Println(*server.games[0])
+    fmt.Println("here in addgame")
+	server.reactionGames = append(server.reactionGames, reactionGame)
+	fmt.Printf("%+v\n", server.reactionGames[0])
+	fmt.Printf("%+v\n", server.reactionGames[0].GameConfig)
+    fmt.Print(len(server.reactionGames))
 }
 
 func NewServer(capacity int, httpServer *http.Server, upgrader *websocket.Upgrader) *Server {
 	newServer := &Server{
-		capacity:   capacity,
-		httpServer: httpServer,
-		upgrader:   upgrader,
-		clients:    make(map[string]*Client),
-		games:      make([]*reactionGame.ReactionGame, 0, 0),
+		capacity:      capacity,
+		httpServer:    httpServer,
+		upgrader:      upgrader,
+		clients:       make(map[int]*Client),
+		reactionGames: make([]*reactionGame.ReactionGame, 0, 0),
 	}
 	server = newServer
 	return newServer

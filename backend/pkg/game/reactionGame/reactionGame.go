@@ -1,8 +1,10 @@
 package reactionGame
 
 import (
+	"errors"
 	"fmt"
 	"math"
+	"time"
 
 	"github.com/gorilla/websocket"
 
@@ -71,6 +73,8 @@ func (reactionGame *ReactionGame) AddPlayer(player *Player) {
 
 func (reactionGame *ReactionGame) SetPlayerConnection(playerId int, connection *websocket.Conn) {
 	reactionGame.Players[playerId].Connection = connection
+    fmt.Println("player after pushing play button")
+    fmt.Printf("%+v\n",reactionGame.Players[playerId])
 }
 
 func NewReactionGame(gameModality bool, playerId int, gameConfig *GameConfig) *ReactionGame {
@@ -81,6 +85,7 @@ func NewReactionGame(gameModality bool, playerId int, gameConfig *GameConfig) *R
 	}
 	player := NewPlayer(playerId)
 	reactionGame.AddPlayer(player)
+	reactionGame.SetCirclePositions()
 	return reactionGame
 }
 
@@ -110,10 +115,11 @@ func (reactionGame *ReactionGame) SetCirclePositions() {
 	}
 }
 
-//	func (reactionGame *ReactionGame) finishGame() {
-//		gameFinishMessage := &game.GameFinishMessage{GameFinishMessage: "Game has finished\nthanks for playing"}
-//		reactionGame.sendToClients(gameFinishMessage)
-//	}
+func (reactionGame *ReactionGame) finishGame() {
+	gameFinishMessage := &GameFinishMessage{GameFinishMessage: "Game has finished\nthanks for playing"}
+	reactionGame.sendToPlayers(gameFinishMessage)
+}
+
 //
 //	func (ReactionGame *ReactionGame) initGame() {
 //		count := 0
@@ -167,20 +173,101 @@ func (reactionGame *ReactionGame) ShowPlayers() {
 	}
 }
 
-func (reactionGame *ReactionGame) handleGame() {
-	if reactionGame.gameIsReady() == false {
-		reactionGame.missingPlayerGame()
-		return
+func (reactionGame *ReactionGame) readyToPlay() bool {
+    fmt.Println("here in ready to play")
+    fmt.Printf("%+v\n",reactionGame)
+	if reactionGame.GameModality == false {
+		if reactionGame.Players[0].Connection != nil {
+			return true
+		}
+	} else {
+		// we should ask how many players will play
+		// in the case only 2 players
+		if reactionGame.Players[0].Connection != nil && reactionGame.Players[1].Connection != nil {
+			return true
+		}
 	}
+	return false
+}
+
+func (reactionGame *ReactionGame) GetCircle() *Circle {
+	min := 0
+	max := len(reactionGame.CirclePositions) - 1
+	randomIndex := game.RandomInteger(min, max)
+	selectedCircle := reactionGame.CirclePositions[randomIndex]
+	return selectedCircle
+}
+
+func (reactionGame *ReactionGame) initGame() {
+	count := 0
+	for {
+		fmt.Println(count)
+		if count > reactionGame.GameConfig.BallNumber-1 {
+			break
+		}
+		count += 1
+		circle := reactionGame.GetCircle()
+		circleMessage := &CircleMessage{
+			CircleInstance: circle,
+		}
+		reactionGame.sendToPlayers(circleMessage)
+		millisecond := int(reactionGame.GameConfig.BallSpeed * 1000)
+		time.Sleep(time.Duration(millisecond) * time.Millisecond)
+	}
+}
+
+func (reactionGame *ReactionGame) getResult() *Player {
+	winner := &Player{}
+	max := -1
+	id := -1
+	for playerId, player := range reactionGame.Players {
+		if player.Counter > max {
+			max = player.Counter
+			id = playerId
+		}
+	}
+	winner = reactionGame.Players[id]
+	return winner
+}
+
+func (reactionGame *ReactionGame) resetGame() {
+	for _, player := range reactionGame.Players {
+		player.Counter = 0
+	}
+	// for _, client := range server.game.Players {
+	// 	client.Counter = 0
+	// }
+	reactionGame.PlayersReady = 0
+	// server.game.PlayerReady = 0
+}
+
+func (reactionGame *ReactionGame) setResult() {
+	winner := reactionGame.getResult()
+	resultMessage := &ResultMessage{}
+	if winner != nil {
+		resultMessage.ResultMessage = fmt.Sprintf("Winner player %d, with %d correct clicks", winner.PlayerId, winner.Counter)
+	} else {
+		resultMessage.ResultMessage = fmt.Sprintf("tie")
+	}
+	reactionGame.sendToPlayers(resultMessage)
+}
+
+func (reactionGame *ReactionGame) HandleGame() {
+	// if reactionGame.gameIsReady() == false {
+	// 	reactionGame.missingPlayerGame()
+	// 	return
+	// }
+    fmt.Printf("%+v\n",reactionGame)
 	reactionGame.readyToPlay()
 	// reactionGame.game is been writting twice that's the reason only a player can put the settings
-	if reactionGame.game == nil {
+	if reactionGame.GameConfig == nil {
 		panic(errors.New("not game configuration yet"))
 	}
+    
 	reactionGame.sendBeforeStartSignal()
 	reactionGame.initGame()
 	reactionGame.setResult()
 	reactionGame.finishGame()
 	reactionGame.resetGame()
-	reactionGame.handleGame()
+	reactionGame.HandleGame()
 }

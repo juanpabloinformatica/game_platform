@@ -51,9 +51,9 @@ async function sendPlayReactionGame(
             gameModality: gameModality,
         });
         const response = await axiosGameCLient.post("/reactiongameconfig", body);
-        if (!response.data) {
-            throw new Error("problem with response");
-        }
+        // if (!response.data) {
+        //     throw new Error("problem with response");
+        // }
         return response.data;
     } catch (error) {
         console.log(error);

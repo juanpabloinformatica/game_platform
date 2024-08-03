@@ -13,24 +13,28 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +6 backend/pkg/game/reactionGame/reactionGame.go
+badd +263 backend/pkg/game/reactionGame/reactionGame.go
 badd +16 backend/pkg/game/gameMessages.go
 badd +74 backend/pkg/server/controllers.go
-badd +12 backend/pkg/server/endpoints.go
-badd +61 backend/pkg/server/server.go
-badd +58 backend/pkg/game/game.go
+badd +1 backend/pkg/server/endpoints.go
+badd +60 backend/pkg/server/server.go
+badd +47 backend/pkg/game/game.go
 badd +49 frontend/src/pages/ReactionGameConfig.tsx
 badd +10 backend/pkg/game/reactionGame/reactionGameUtils.go
-badd +46 frontend/src/services/games/reactionGame/reactionGameServices.ts
+badd +54 frontend/src/services/games/reactionGame/reactionGameServices.ts
 badd +1 backend/pkg/game/reactionGame/reactionGameMessages.go
 badd +65 frontend/src/hooks/pages/reactionGameConfig/ReactionGameConfigStates.ts
-badd +15 frontend/src/games/reactionGame/ReactionGame.tsx
-badd +1 frontend/src/games/reactionGame/logic/reaction_game_socket_react.tsx
-badd +0 ~/Documents/NewProject
+badd +18 frontend/src/games/reactionGame/ReactionGame.tsx
+badd +152 frontend/src/games/reactionGame/logic/reaction_game_socket_react.tsx
+badd +1 ~/Documents/NewProject
+badd +23 ~/Documents/Learning/AboutPc/nand2tetris/projects/1/And16.hdl
+badd +1 frontend/src/games/utils.ts
+badd +7 backend/pkg/game/gameUtils.go
+badd +1 auth/src/server/controllers.ts
 argglobal
 %argdel
 $argadd ~/Documents/NewProject
-edit frontend/src/games/reactionGame/logic/reaction_game_socket_react.tsx
+edit frontend/src/games/reactionGame/ReactionGame.tsx
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
@@ -63,20 +67,20 @@ set winminheight=0
 set winheight=1
 set winminwidth=0
 set winwidth=1
-exe '1resize ' . ((&lines * 30 + 32) / 64)
-exe 'vert 1resize ' . ((&columns * 105 + 158) / 317)
-exe '2resize ' . ((&lines * 31 + 32) / 64)
-exe 'vert 2resize ' . ((&columns * 105 + 158) / 317)
-exe '3resize ' . ((&lines * 31 + 32) / 64)
-exe 'vert 3resize ' . ((&columns * 105 + 158) / 317)
-exe '4resize ' . ((&lines * 31 + 32) / 64)
-exe 'vert 4resize ' . ((&columns * 105 + 158) / 317)
-exe '5resize ' . ((&lines * 30 + 32) / 64)
-exe 'vert 5resize ' . ((&columns * 105 + 158) / 317)
-exe '6resize ' . ((&lines * 30 + 32) / 64)
-exe 'vert 6resize ' . ((&columns * 105 + 158) / 317)
+exe '1resize ' . ((&lines * 21 + 24) / 49)
+exe 'vert 1resize ' . ((&columns * 79 + 119) / 238)
+exe '2resize ' . ((&lines * 25 + 24) / 49)
+exe 'vert 2resize ' . ((&columns * 79 + 119) / 238)
+exe '3resize ' . ((&lines * 22 + 24) / 49)
+exe 'vert 3resize ' . ((&columns * 79 + 119) / 238)
+exe '4resize ' . ((&lines * 22 + 24) / 49)
+exe 'vert 4resize ' . ((&columns * 78 + 119) / 238)
+exe '5resize ' . ((&lines * 24 + 24) / 49)
+exe 'vert 5resize ' . ((&columns * 79 + 119) / 238)
+exe '6resize ' . ((&lines * 24 + 24) / 49)
+exe 'vert 6resize ' . ((&columns * 78 + 119) / 238)
 argglobal
-balt frontend/src/games/reactionGame/ReactionGame.tsx
+balt frontend/src/games/utils.ts
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -87,12 +91,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 152 - ((5 * winheight(0) + 15) / 30)
+let s:l = 21 - ((13 * winheight(0) + 10) / 21)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 152
-normal! 040|
+keepjumps 21
+normal! 010|
 lcd ~/Documents/NewProject
 wincmd w
 argglobal
@@ -100,7 +104,7 @@ if bufexists(fnamemodify("~/Documents/NewProject/frontend/src/services/games/rea
 if &buftype ==# 'terminal'
   silent file ~/Documents/NewProject/frontend/src/services/games/reactionGame/reactionGameServices.ts
 endif
-balt ~/Documents/NewProject/backend/pkg/game/reactionGame/reactionGame.go
+balt ~/Documents/NewProject/frontend/src/games/reactionGame/logic/reaction_game_socket_react.tsx
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -111,36 +115,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 46 - ((15 * winheight(0) + 15) / 31)
+let s:l = 53 - ((12 * winheight(0) + 12) / 25)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 46
-normal! 03|
-lcd ~/Documents/NewProject
-wincmd w
-argglobal
-if bufexists(fnamemodify("~/Documents/NewProject/backend/pkg/server/server.go", ":p")) | buffer ~/Documents/NewProject/backend/pkg/server/server.go | else | edit ~/Documents/NewProject/backend/pkg/server/server.go | endif
-if &buftype ==# 'terminal'
-  silent file ~/Documents/NewProject/backend/pkg/server/server.go
-endif
-balt ~/Documents/NewProject/frontend/src/pages/ReactionGameConfig.tsx
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 73 - ((26 * winheight(0) + 15) / 31)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 73
-normal! 0
+keepjumps 53
+normal! 015|
 lcd ~/Documents/NewProject
 wincmd w
 argglobal
@@ -159,12 +139,36 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 97 - ((19 * winheight(0) + 15) / 31)
+let s:l = 74 - ((9 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 97
-normal! 019|
+keepjumps 74
+normal! 05|
+lcd ~/Documents/NewProject
+wincmd w
+argglobal
+if bufexists(fnamemodify("~/Documents/NewProject/backend/pkg/game/reactionGame/reactionGame.go", ":p")) | buffer ~/Documents/NewProject/backend/pkg/game/reactionGame/reactionGame.go | else | edit ~/Documents/NewProject/backend/pkg/game/reactionGame/reactionGame.go | endif
+if &buftype ==# 'terminal'
+  silent file ~/Documents/NewProject/backend/pkg/game/reactionGame/reactionGame.go
+endif
+balt ~/Documents/NewProject/backend/pkg/game/game.go
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 267 - ((0 * winheight(0) + 11) / 22)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 267
+normal! 033|
 lcd ~/Documents/NewProject
 wincmd w
 argglobal
@@ -183,11 +187,11 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 47 - ((14 * winheight(0) + 15) / 30)
+let s:l = 46 - ((0 * winheight(0) + 12) / 24)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 47
+keepjumps 46
 normal! 0
 lcd ~/Documents/NewProject
 wincmd w
@@ -207,7 +211,7 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 18 - ((17 * winheight(0) + 15) / 30)
+let s:l = 18 - ((0 * winheight(0) + 12) / 24)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
@@ -215,19 +219,18 @@ keepjumps 18
 normal! 0
 lcd ~/Documents/NewProject
 wincmd w
-3wincmd w
-exe '1resize ' . ((&lines * 30 + 32) / 64)
-exe 'vert 1resize ' . ((&columns * 105 + 158) / 317)
-exe '2resize ' . ((&lines * 31 + 32) / 64)
-exe 'vert 2resize ' . ((&columns * 105 + 158) / 317)
-exe '3resize ' . ((&lines * 31 + 32) / 64)
-exe 'vert 3resize ' . ((&columns * 105 + 158) / 317)
-exe '4resize ' . ((&lines * 31 + 32) / 64)
-exe 'vert 4resize ' . ((&columns * 105 + 158) / 317)
-exe '5resize ' . ((&lines * 30 + 32) / 64)
-exe 'vert 5resize ' . ((&columns * 105 + 158) / 317)
-exe '6resize ' . ((&lines * 30 + 32) / 64)
-exe 'vert 6resize ' . ((&columns * 105 + 158) / 317)
+exe '1resize ' . ((&lines * 21 + 24) / 49)
+exe 'vert 1resize ' . ((&columns * 79 + 119) / 238)
+exe '2resize ' . ((&lines * 25 + 24) / 49)
+exe 'vert 2resize ' . ((&columns * 79 + 119) / 238)
+exe '3resize ' . ((&lines * 22 + 24) / 49)
+exe 'vert 3resize ' . ((&columns * 79 + 119) / 238)
+exe '4resize ' . ((&lines * 22 + 24) / 49)
+exe 'vert 4resize ' . ((&columns * 78 + 119) / 238)
+exe '5resize ' . ((&lines * 24 + 24) / 49)
+exe 'vert 5resize ' . ((&columns * 79 + 119) / 238)
+exe '6resize ' . ((&lines * 24 + 24) / 49)
+exe 'vert 6resize ' . ((&columns * 78 + 119) / 238)
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

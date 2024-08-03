@@ -10,7 +10,6 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"github.com/juanpabloinformatica/game_platform/pkg/game"
 	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
 
@@ -93,12 +92,16 @@ func getClientId(request *http.Request) int {
 }
 
 func handleSocketConnection(conn *websocket.Conn, writter http.ResponseWriter, request *http.Request) {
+    fmt.Println("hellloooooo in handleConnection")
+
 	clientId := getClientId(request)
 	client := server.newClient(conn, clientId)
 	server.addClient(client)
 	// how to handle multiple connections to different games
+    fmt.Printf("%+v\n",server.reactionGames[0].Players[clientId])
 	server.reactionGames[0].SetPlayerConnection(clientId, conn)
 	go hearMessage(server.reactionGames[0].Players[clientId])
+	server.reactionGames[0].HandleGame()
 	// go hearMessage(client)
 	// server.handleGame()
 }
