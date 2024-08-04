@@ -73,7 +73,7 @@ function hideResult(resultDiv: HTMLDivElement) {
         resultDiv.style.display = "none";
     }
 }
-let buttonListener: () => void;
+let  buttonListener:   () => Promise<WebSocket>;
 function createCircle(circle: Circle) {
     let newCircle: Circle = {
         posX: circle.posX,
@@ -117,7 +117,7 @@ function generateBeforeStartSignal(
         counter += 1;
     }, 1000);
 }
-function handleMessages(canvas: HTMLCanvasElement, result: HTMLDivElement): void {
+function handleMessages(socket: WebSocket, canvas: HTMLCanvasElement, result: HTMLDivElement): void {
     console.log(SOCKET)
     console.log("entre acaaaaaaa")
     if (SOCKET) {
@@ -144,34 +144,56 @@ function handleMessages(canvas: HTMLCanvasElement, result: HTMLDivElement): void
         });
     }
 }
-function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result: HTMLDivElement, playerId: number) {
+async function setButton(button: HTMLButtonElement, canvas: HTMLCanvasElement, result: HTMLDivElement, playerId: number) {
+    let socket: any = null
+    // console.log(socket)
+    let counter = 0
+    console.log("counter outside")
+    console.log(counter)
     console.log("inside setButton")
-    buttonListener = () => {
-        if (!SOCKET) {
-            console.log("entre cuando el socket no existe")
+    buttonListener = (): Promise<WebSocket> => {
+        console.log("volvi a entrar")
+        console.log(counter)
+        if (counter == 0) {
+            console.log("in condition")
             let socketConnection = setSocketConnection(playerId)
-            SOCKET = initHttpUpgradeRequest(socketConnection)
-            console.log(SOCKET)
+            socket = initHttpUpgradeRequest(socketConnection)
+            counter++
         }
-        console.log("he dado click")
-        if (SOCKET) {
-            SOCKET!.addEventListener("open", (_) => {
-                SOCKET!.send("ready")
-            })
-            if (flag == 0) {
-                handleMessages(canvas, result)
-                flag += 1
+        return new Promise((resolve, _) => {
+            if (socket) {
+                resolve(socket)
             }
-        }
+        })
+        // console.log(socket)
+        // if (!SOCKET) {
+        //     console.log("entre cuando el socket no existe")
+        //     let socketConnection = setSocketConnection(playerId)
+        //     socket = initHttpUpgradeRequest(socketConnection)
+        //     console.log(SOCKET)
+        // }
+        // console.log("he dado click")
+        // if (SOCKET) {
+        //     SOCKET!.addEventListener("open", (_) => {
+        //         SOCKET!.send("ready")
+        //     })
+        //     if (flag == 0) {
+        //         handleMessages(canvas, result)
+        //         flag += 1
+        //     }
+        // }
     };
-    button.addEventListener("click", buttonListener);
+    // return buttonListener
+    // return button.addEventListener("click", buttonListener);
+    await button.addEventListener("click", async () => { await buttonListener() });
 }
-function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement, playerId: number) {
+async function init(canvas: HTMLCanvasElement, button: HTMLButtonElement, result: HTMLDivElement, playerId: number) {
     console.log("here,jajajajajaja")
     if (canvas && result) {
         // setButton(button, SOCKET!);
-        setButton(button, canvas, result, playerId);
-        // handleMessages(canvas, result)
+        await setButton(button, canvas, result, playerId)
+        console.log("1000")
+        handleMessages(socket, canvas, result)
     }
 }
 
