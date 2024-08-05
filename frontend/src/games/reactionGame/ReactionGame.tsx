@@ -12,10 +12,12 @@ function ReactionGame() {
     let buttonRef = useRef(null);
     let resultRef = useRef(null);
     const playerId = useSelector<RootState>(state => state.auth.user)
+    const playerSocket = useSelector<RootState>(state => state.reactionGame.userSocket)
     useEffect(() => {
         let canvas = canvasRef.current;
         setCanvas(canvas!)
-        init(canvasRef.current!, buttonRef.current!, resultRef.current!, playerId)
+        // console.log(playerSocket)
+        init(playerSocket, canvasRef.current!, buttonRef.current!, resultRef.current!)
     }, [])
     return (<>
         <CustomNavbar />

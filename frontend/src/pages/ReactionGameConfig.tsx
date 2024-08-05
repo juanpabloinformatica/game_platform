@@ -1,4 +1,4 @@
-import { updateBallNumber, updateBallSpeed } from "../redux/features/games/reactionGame/reactionGameSlice";
+import { setUserSocket, updateBallNumber, updateBallSpeed } from "../redux/features/games/reactionGame/reactionGameSlice";
 import { useNavigate } from "react-router-dom";
 import { sendCreateReactionGame, sendJoinReactionGame, sendPlayReactionGame } from "../services/games/reactionGame/reactionGameServices";
 import CustomNavbar from "../components/Navbar";
@@ -11,6 +11,7 @@ import {
     useReactionGameConfigState,
     useReactionGameToggleModalityButton
 } from "../hooks/pages/reactionGameConfig/ReactionGameConfigStates";
+import { initHttpUpgradeRequest, setSocketConnection } from "../games/utils";
 function ReactionGameConfig() {
     const { inputBallSpeed,
         setInputBallSpeed,
@@ -28,11 +29,12 @@ function ReactionGameConfig() {
     useReactionGameToggleModalityButton(onePlayer.current!, multiPlayer.current!, gameModality)
     const handleCreateButton = (e: React.MouseEvent) => {
         e.preventDefault()
-        // dispatch(setModality(gameModality))
         if (inputBallSpeed != "" && inputBallNumber != "") {
-            // dispatch(updateBallSpeed(parseFloat(inputBallSpeed)))
-            // dispatch(updateBallNumber(parseInt(inputBallNumber)))
-            sendCreateReactionGame(parseFloat(inputBallSpeed), parseInt(inputBallNumber), playerId)
+            let gameConfig: { ballNumber: number, ballSpeed: number, height: number, width: number } = { ballNumber: parseInt(inputBallNumber), ballSpeed: parseFloat(inputBallSpeed), width: 500, height: 500 }
+            sendPlayReactionGame(gameConfig, playerId, gameModality)
+            let socketConnection = setSocketConnection(playerId)
+            let socket = initHttpUpgradeRequest(socketConnection)
+            dispatch(setUserSocket(socket))
             navigate("/reactiongame")
         } else {
             console.log("empty fields")
@@ -40,7 +42,6 @@ function ReactionGameConfig() {
     }
     const handleJoinButton = (e: React.MouseEvent) => {
         e.preventDefault()
-        dispatch(setModality(gameModality))
         if (inputJoinGame != -1) {
             sendJoinReactionGame(playerId)
             navigate("/reactiongame")
@@ -60,6 +61,9 @@ function ReactionGameConfig() {
         e.preventDefault()
         let gameConfig: { ballNumber: number, ballSpeed: number, height: number, width: number } = { ballNumber: parseInt(inputBallNumber), ballSpeed: parseFloat(inputBallSpeed), width: 500, height: 500 }
         sendPlayReactionGame(gameConfig, playerId, gameModality)
+        let socketConnection = setSocketConnection(playerId)
+        let socket = initHttpUpgradeRequest(socketConnection)
+        dispatch(setUserSocket(socket))
         navigate("/reactiongame")
     }
     return (<>

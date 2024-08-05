@@ -26,33 +26,35 @@ func handlerWs(writter http.ResponseWriter, request *http.Request) {
 	handleSocketConnection(conn, writter, request)
 }
 
-// func handleCreateReactionGame(writter http.ResponseWriter, request *http.Request) {
-// 	gameConfig := &game.GameConfig{}
-// 	body, err := ioutil.ReadAll(request.Body)
-// 	if err != nil {
-// 		panic(err.Error())
-// 	}
-// 	if len(body) <= 0 {
-// 		panic(errors.New("empty body"))
-// 	}
-// 	json.Unmarshal(body, gameConfig)
-// 	server.setGame(gameConfig)
-// }
-//
-// func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) {
-// 	joinGame := &game.JoinGame{}
-// 	body, err := ioutil.ReadAll(request.Body)
-// 	if err != nil {
-// 		panic(err.Error())
-// 	}
-// 	if len(body) <= 0 {
-// 		panic(errors.New("empty body"))
-// 	}
-// 	json.Unmarshal(body, joinGame)
-// 	fmt.Println(joinGame)
-// 	// server.game.AddPlayer(joinGame.PlayerId)
-// 	// server.addClient()
-// }
+//	func handleCreateReactionGame(writter http.ResponseWriter, request *http.Request) {
+//		gameConfig := &game.GameConfig{}
+//		body, err := ioutil.ReadAll(request.Body)
+//		if err != nil {
+//			panic(err.Error())
+//		}
+//		if len(body) <= 0 {
+//			panic(errors.New("empty body"))
+//		}
+//		json.Unmarshal(body, gameConfig)
+//		server.setGame(gameConfig)
+//	}
+func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) {
+	joinGame := &reactionGame.JoinGame{}
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		panic(err.Error())
+	}
+	if len(body) <= 0 {
+		panic(errors.New("empty body"))
+	}
+	json.Unmarshal(body, joinGame)
+	fmt.Println(joinGame)
+	player := reactionGame.NewPlayer(joinGame.PlayerId)
+	server.reactionGames[0].AddPlayer(player)
+	server.reactionGames[0].Room.AddPlayer(player)
+	// server.game.AddPlayer(joinGame.PlayerId)
+	// server.addClient()
+}
 
 func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request) {
 	playGame := &reactionGame.PlayGame{}
@@ -92,13 +94,12 @@ func getClientId(request *http.Request) int {
 }
 
 func handleSocketConnection(conn *websocket.Conn, writter http.ResponseWriter, request *http.Request) {
-    fmt.Println("hellloooooo in handleConnection")
-
+	fmt.Println("hellloooooo in handleConnection")
 	clientId := getClientId(request)
 	client := server.newClient(conn, clientId)
 	server.addClient(client)
 	// how to handle multiple connections to different games
-    fmt.Printf("%+v\n",server.reactionGames[0].Players[clientId])
+	fmt.Printf("%+v\n", server.reactionGames[0].Players[clientId])
 	server.reactionGames[0].SetPlayerConnection(clientId, conn)
 	go hearMessage(server.reactionGames[0].Players[clientId])
 	server.reactionGames[0].HandleGame()
@@ -136,6 +137,7 @@ func hearMessage(player *reactionGame.Player) {
 			return
 		}
 		fmt.Println(string(p))
+
 		if string(p) == "ready" {
 			// server.clientsReady += 1
 			// server.game.PlayerReady += 1

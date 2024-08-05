@@ -11,6 +11,10 @@ import (
 	"github.com/juanpabloinformatica/game_platform/pkg/game"
 )
 
+type Room struct {
+	roomId  int `json:"roomId,omitempty"`
+	Players map[int]*Player
+}
 type Circle struct {
 	PosX     int     `json:"posX"`
 	PosY     int     `json:"posY"`
@@ -40,15 +44,30 @@ type Player struct {
 	game.Player
 	Counter int
 }
+type JoinGame struct {
+	PlayerId int `json:"playerId"`
+	RoomId   int `json:"roomId"`
+}
 
 type ReactionGame struct {
 	// game.Game
+	Room            *Room
 	GameConfig      *GameConfig
 	CirclePositions []*Circle
 	// should be in game parent class
 	Players      map[int]*Player
 	GameModality bool
 	PlayersReady int
+	// this will be improved consistenly
+	sameRoom bool
+}
+
+func (reactionGame *ReactionGame) generateRoomId() int {
+	return 1
+}
+
+func (room *Room) AddPlayer(player *Player) {
+	room.Players[player.PlayerId] = player
 }
 
 func NewPlayer(playerId int) *Player {
@@ -73,8 +92,8 @@ func (reactionGame *ReactionGame) AddPlayer(player *Player) {
 
 func (reactionGame *ReactionGame) SetPlayerConnection(playerId int, connection *websocket.Conn) {
 	reactionGame.Players[playerId].Connection = connection
-    fmt.Println("player after pushing play button")
-    fmt.Printf("%+v\n",reactionGame.Players[playerId])
+	fmt.Println("player after pushing play button")
+	fmt.Printf("%+v\n", reactionGame.Players[playerId])
 }
 
 func NewReactionGame(gameModality bool, playerId int, gameConfig *GameConfig) *ReactionGame {
@@ -82,6 +101,14 @@ func NewReactionGame(gameModality bool, playerId int, gameConfig *GameConfig) *R
 		GameModality: gameModality,
 		Players:      make(map[int]*Player),
 		GameConfig:   gameConfig,
+	}
+	// this has to be better done
+	if reactionGame.GameModality {
+		reactionGame.Room = &Room{
+			roomId:  reactionGame.generateRoomId(),
+			Players: make(map[int]*Player),
+		}
+		reactionGame.Room.AddPlayer(reactionGame.Players[playerId])
 	}
 	player := NewPlayer(playerId)
 	reactionGame.AddPlayer(player)
@@ -173,17 +200,12 @@ func (reactionGame *ReactionGame) ShowPlayers() {
 	}
 }
 
-func (reactionGame *ReactionGame) readyToPlay() bool {
-    fmt.Println("here in ready to play")
-    fmt.Printf("%+v\n",reactionGame)
-	if reactionGame.GameModality == false {
-		if reactionGame.Players[0].Connection != nil {
-			return true
-		}
-	} else {
-		// we should ask how many players will play
-		// in the case only 2 players
-		if reactionGame.Players[0].Connection != nil && reactionGame.Players[1].Connection != nil {
+func (reactionGame *ReactionGame) goodToPlay() bool {
+	// fmt.Println("here in ready to play")
+	// fmt.Printf("%+v\n", reactionGame)
+	// fmt.Println(reactionGame.GameModality)
+	for _, player := range reactionGame.Players {
+		if player.Connection != nil {
 			return true
 		}
 	}
@@ -252,18 +274,34 @@ func (reactionGame *ReactionGame) setResult() {
 	reactionGame.sendToPlayers(resultMessage)
 }
 
+func (reactionGame *ReactionGame) readyToPlay() {
+	for {
+		if reactionGame.PlayersReady == len(reactionGame.Players) {
+			break
+		}
+	}
+}
+
 func (reactionGame *ReactionGame) HandleGame() {
 	// if reactionGame.gameIsReady() == false {
 	// 	reactionGame.missingPlayerGame()
 	// 	return
 	// }
-    fmt.Printf("%+v\n",reactionGame)
+	fmt.Printf("%+v\n", reactionGame)
+	if reactionGame.GameModality {
+		// wait for players the keep going
+		for reactionGame.PlayersReady < 2 {
+			if len(reactionGame.Room.Players) == 2 {
+				break
+			}
+		}
+	}
 	reactionGame.readyToPlay()
+	reactionGame.goodToPlay()
 	// reactionGame.game is been writting twice that's the reason only a player can put the settings
 	if reactionGame.GameConfig == nil {
 		panic(errors.New("not game configuration yet"))
 	}
-    
 	reactionGame.sendBeforeStartSignal()
 	reactionGame.initGame()
 	reactionGame.setResult()

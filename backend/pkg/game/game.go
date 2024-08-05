@@ -1,8 +1,6 @@
 package game
 
 import (
-	// "fmt"
-
 	"github.com/gorilla/websocket"
 )
 
@@ -15,13 +13,15 @@ type PlayGame struct {
 	PlayerId     int  `json:"playerId"`
 	GameModality bool `json:"gameModality"`
 }
-// type Games interface {
-// 	handleGame()
-// 	resetGame()
-// 	addPlayer()
-// 	readyToPlay()
-// }
+
+//	type Games interface {
+//		handleGame()
+//		resetGame()
+//		addPlayer()
+//		readyToPlay()
+//	}
 type Game struct {
+    // *Room
 	// GameConfig      *GameConfig
 	// CirclePositions []*Circle
 	// Players      map[int]*Player
@@ -33,6 +33,10 @@ type Game struct {
 	// GameFinishMessage        string  `json:"gameFinishMessage"`
 	// BeforeStartSignalMessage string  `json:"beforeStartSignalMessage"`
 }
+// type Room struct {
+// 	roomId  int
+// 	Players map[int]*Player
+// }
 
 // func (game *Game) AddPlayer(player *Player) {
 // 	game.Players[player.PlayerId] = player
