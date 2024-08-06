@@ -5,15 +5,15 @@ import { AppDispatch, RootState } from "../../../redux/store";
 function useReactionGameConfigState() {
     const [inputBallSpeed, setInputBallSpeed] = useState("1");
     const [inputBallNumber, setInputBallNumber] = useState("10");
-    const [inputJoinGame, setInputJoinGame] = useState(0);
+    const [inputRoomId, setInputRoomId] = useState(0);
     const [gameModality, setGameModality] = useState(false);
     return {
         inputBallSpeed,
         setInputBallSpeed,
         inputBallNumber,
         setInputBallNumber,
-        inputJoinGame,
-        setInputJoinGame,
+        inputRoomId,
+        setInputRoomId,
         gameModality,
         setGameModality,
     };

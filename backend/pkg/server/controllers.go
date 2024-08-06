@@ -26,18 +26,24 @@ func handlerWs(writter http.ResponseWriter, request *http.Request) {
 	handleSocketConnection(conn, writter, request)
 }
 
-//	func handleCreateReactionGame(writter http.ResponseWriter, request *http.Request) {
-//		gameConfig := &game.GameConfig{}
-//		body, err := ioutil.ReadAll(request.Body)
-//		if err != nil {
-//			panic(err.Error())
-//		}
-//		if len(body) <= 0 {
-//			panic(errors.New("empty body"))
-//		}
-//		json.Unmarshal(body, gameConfig)
-//		server.setGame(gameConfig)
-//	}
+func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request) {
+	playGame := &reactionGame.PlayGame{}
+	body, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		panic(err.Error())
+	}
+	if len(body) <= 0 {
+		panic(errors.New("empty body"))
+	}
+	json.Unmarshal(body, playGame)
+	modality := playGame.GameModality
+	playerId := playGame.PlayerId
+	roomId := playGame.RoomId
+	reactionGameConfig := playGame.GameConfig
+	reactionGame := reactionGame.NewReactionGame(modality, playerId, reactionGameConfig, roomId)
+	server.AddGame(reactionGame)
+}
+
 func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) {
 	joinGame := &reactionGame.JoinGame{}
 	body, err := ioutil.ReadAll(request.Body)
@@ -51,35 +57,18 @@ func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) 
 	fmt.Println(joinGame)
 	player := reactionGame.NewPlayer(joinGame.PlayerId)
 	server.reactionGames[0].AddPlayer(player)
-	server.reactionGames[0].Room.AddPlayer(player)
-	// server.game.AddPlayer(joinGame.PlayerId)
-	// server.addClient()
-}
-
-func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request) {
-	playGame := &reactionGame.PlayGame{}
-	body, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		panic(err.Error())
+	if joinGame.RoomId == server.reactionGames[0].Room.RoomId {
+		fmt.Println("entre aqui por que ambos tienen el mismo room id")
+		fmt.Println("hereeeeee when 2 players same room before adding new")
+		fmt.Println(len(server.reactionGames[0].Room.Players))
+		fmt.Println(len(server.reactionGames[0].Players))
+		server.reactionGames[0].Room.AddPlayer(player)
+		fmt.Println("hereeeeee when 2 players same room")
+		fmt.Println(len(server.reactionGames[0].Room.Players))
+		fmt.Println(len(server.reactionGames[0].Players))
+	} else {
+		fmt.Println("this player is not in the same created room")
 	}
-	if len(body) <= 0 {
-		panic(errors.New("empty body"))
-	}
-	json.Unmarshal(body, playGame)
-	modality := playGame.GameModality
-	playerId := playGame.PlayerId
-	reactionGameConfig := playGame.GameConfig
-	reactionGame := reactionGame.NewReactionGame(modality, playerId, reactionGameConfig)
-	// fmt.Printf("%+v\n",playGame.GameConfig)
-	// fmt.Println(playGame.PlayerId)
-	// fmt.Println(playGame.GameModality)
-	server.AddGame(reactionGame)
-	// game := game.NewGame(playGame.GameModality)
-	// player := game.NewPlayer(playGame.PlayerId,)
-	// game.AddPlayer(player)
-	// reactionGame := reactionGame.NewReactionGame()
-	// server.addGame(reactionGame)
-	// fmt.Println(joinGame)
 }
 
 func getClientId(request *http.Request) int {
@@ -93,6 +82,9 @@ func getClientId(request *http.Request) int {
 	return clientId
 }
 
+// just for initializing the game once
+var count = 0
+
 func handleSocketConnection(conn *websocket.Conn, writter http.ResponseWriter, request *http.Request) {
 	fmt.Println("hellloooooo in handleConnection")
 	clientId := getClientId(request)
@@ -102,30 +94,11 @@ func handleSocketConnection(conn *websocket.Conn, writter http.ResponseWriter, r
 	fmt.Printf("%+v\n", server.reactionGames[0].Players[clientId])
 	server.reactionGames[0].SetPlayerConnection(clientId, conn)
 	go hearMessage(server.reactionGames[0].Players[clientId])
-	server.reactionGames[0].HandleGame()
-	// go hearMessage(client)
-	// server.handleGame()
+	if count == 0 {
+		server.reactionGames[0].HandleGame()
+		count++
+	}
 }
-
-// func hearMessage(client *Client) {
-// 	// defer client.connection.Close()
-// 	for {
-// 		// _, p, err := client.connection.ReadMessage()
-// 		_, p, err := client.connection.ReadMessage()
-//
-// 		if err != nil {
-// 			fmt.Println(err)
-// 			return
-// 		}
-// 		fmt.Println(string(p))
-// 		if string(p) == "ready" {
-// 			// server.clientsReady += 1
-// 			// server.game.PlayerReady += 1
-// 		} else {
-// 			// client.counter += 1
-// 		}
-// 	}
-// }
 
 func hearMessage(player *reactionGame.Player) {
 	// defer client.connection.Close()
@@ -137,11 +110,13 @@ func hearMessage(player *reactionGame.Player) {
 			return
 		}
 		fmt.Println(string(p))
-
 		if string(p) == "ready" {
 			// server.clientsReady += 1
 			// server.game.PlayerReady += 1
 			server.reactionGames[0].PlayersReady += 1
+            fmt.Println("player: ")
+			fmt.Println(player)
+			fmt.Println(server.reactionGames[0].PlayersReady)
 		} else {
 			// client.counter += 1
 			// server.reactionGames[0].Players[player.PlayerId].Counter += 1

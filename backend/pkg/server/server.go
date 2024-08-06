@@ -23,6 +23,7 @@ type (
 		upgrader   *websocket.Upgrader
 		clients    map[int]*Client
 		// games      []*game.Game
+		// This should be an array of games, each game in the array could be different extending for game class
 		reactionGames []*reactionGame.ReactionGame
 	}
 )
@@ -50,17 +51,8 @@ func (server *Server) sendToClients(message interface{}) {
 }
 
 // this should be the correct one need to check polymorphism in greater detail in goolang
-// func (server *Server) AddGame(game *game.Game) {
-// 	server.games = append(server.games, game)
-// }
-
-// this should be the correct one need to check polymorphism in greater detail in goolang
 func (server *Server) AddGame(reactionGame *reactionGame.ReactionGame) {
-    fmt.Println("here in addgame")
 	server.reactionGames = append(server.reactionGames, reactionGame)
-	fmt.Printf("%+v\n", server.reactionGames[0])
-	fmt.Printf("%+v\n", server.reactionGames[0].GameConfig)
-    fmt.Print(len(server.reactionGames))
 }
 
 func NewServer(capacity int, httpServer *http.Server, upgrader *websocket.Upgrader) *Server {

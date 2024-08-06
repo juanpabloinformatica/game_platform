@@ -1,9 +1,8 @@
-import { setUserSocket, updateBallNumber, updateBallSpeed } from "../redux/features/games/reactionGame/reactionGameSlice";
+import { setUserSocket } from "../redux/features/games/reactionGame/reactionGameSlice";
 import { useNavigate } from "react-router-dom";
-import { sendCreateReactionGame, sendJoinReactionGame, sendPlayReactionGame } from "../services/games/reactionGame/reactionGameServices";
+import { sendJoinReactionGame, sendPlayReactionGame } from "../services/games/reactionGame/reactionGameServices";
 import CustomNavbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { setModality } from "../redux/features/games/gamesSlice";
 import {
     useReactionGameConfigDispatch,
     useReactionGameConfigRef,
@@ -17,8 +16,8 @@ function ReactionGameConfig() {
         setInputBallSpeed,
         inputBallNumber,
         setInputBallNumber,
-        inputJoinGame,
-        setInputJoinGame,
+        inputRoomId,
+        setInputRoomId,
         gameModality,
         setGameModality,
     } = useReactionGameConfigState()
@@ -27,24 +26,43 @@ function ReactionGameConfig() {
     const { dispatch } = useReactionGameConfigDispatch()
     const navigate = useNavigate()
     useReactionGameToggleModalityButton(onePlayer.current!, multiPlayer.current!, gameModality)
-    const handleCreateButton = (e: React.MouseEvent) => {
+    const handlePlayButton = (e: React.MouseEvent) => {
         e.preventDefault()
         if (inputBallSpeed != "" && inputBallNumber != "") {
-            let gameConfig: { ballNumber: number, ballSpeed: number, height: number, width: number } = { ballNumber: parseInt(inputBallNumber), ballSpeed: parseFloat(inputBallSpeed), width: 500, height: 500 }
-            sendPlayReactionGame(gameConfig, playerId, gameModality)
-            let socketConnection = setSocketConnection(playerId)
-            let socket = initHttpUpgradeRequest(socketConnection)
-            dispatch(setUserSocket(socket))
-            navigate("/reactiongame")
+            let gameConfig: {
+                ballNumber: number, ballSpeed: number,
+                height: number, width: number
+            } = {
+                ballNumber: parseInt(inputBallNumber),
+                ballSpeed: parseFloat(inputBallSpeed), width: 500, height: 500
+            }
+            if (typeof playerId == "number") {
+                if (gameModality) {
+                    let roomId = inputRoomId
+                    sendPlayReactionGame(gameConfig, playerId, gameModality, roomId)
+                } else {
+                    sendPlayReactionGame(gameConfig, playerId, gameModality, 0)
+                }
+                let socketConnection = setSocketConnection(playerId)
+                let socket = initHttpUpgradeRequest(socketConnection)
+                dispatch(setUserSocket(socket))
+                navigate("/reactiongame")
+            }
         } else {
             console.log("empty fields")
         }
     }
     const handleJoinButton = (e: React.MouseEvent) => {
         e.preventDefault()
-        if (inputJoinGame != -1) {
-            sendJoinReactionGame(playerId)
-            navigate("/reactiongame")
+        if (inputRoomId != -1) {
+            if (typeof playerId == "number") {
+                sendJoinReactionGame(playerId, inputRoomId)
+
+                let socketConnection = setSocketConnection(playerId)
+                let socket = initHttpUpgradeRequest(socketConnection)
+                dispatch(setUserSocket(socket))
+                navigate("/reactiongame")
+            }
         } else {
             console.log("empty fields")
         }
@@ -56,15 +74,6 @@ function ReactionGameConfig() {
     const handleMultiplayerButton = (e: React.MouseEvent) => {
         e.preventDefault()
         setGameModality(true)
-    }
-    const handlePlayButton = (e: React.MouseEvent) => {
-        e.preventDefault()
-        let gameConfig: { ballNumber: number, ballSpeed: number, height: number, width: number } = { ballNumber: parseInt(inputBallNumber), ballSpeed: parseFloat(inputBallSpeed), width: 500, height: 500 }
-        sendPlayReactionGame(gameConfig, playerId, gameModality)
-        let socketConnection = setSocketConnection(playerId)
-        let socket = initHttpUpgradeRequest(socketConnection)
-        dispatch(setUserSocket(socket))
-        navigate("/reactiongame")
     }
     return (<>
 
@@ -83,10 +92,10 @@ function ReactionGameConfig() {
                         <input className="" type="number" step="0.1" min="0" value={inputBallSpeed} onChange={(e) => setInputBallSpeed(e.target.value)}></input>
                         <label>Ball number</label>
                         <input className="" type="number" step="1" value={inputBallNumber} onChange={(e) => setInputBallNumber(e.target.value)} ></input>
-                        <label>Join Game Id</label>
-                        <input className="" type="text" value={inputJoinGame} onChange={(e) => setInputJoinGame(parseInt(e.target.value))} ></input>
+                        <label>RoomId</label>
+                        <input className="" type="text" value={inputRoomId} onChange={(e) => setInputRoomId(parseInt(e.target.value))} ></input>
                         <div className="buttonWrapper">
-                            <button className="" onClick={handleCreateButton}> Create </button>
+                            <button className="" onClick={handlePlayButton}> Create </button>
                             <button className="" onClick={handleJoinButton}> Join </button>
                         </div>
                     </form>
