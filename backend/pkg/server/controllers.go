@@ -40,7 +40,8 @@ func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request
 	playerId := playGame.PlayerId
 	roomId := playGame.RoomId
 	reactionGameConfig := playGame.GameConfig
-	reactionGame := reactionGame.NewReactionGame(modality, playerId, reactionGameConfig, roomId)
+	// This database driver has to be better handle, maybe check connection pool or something to improve it
+	reactionGame := reactionGame.NewReactionGame(modality, playerId, reactionGameConfig, roomId, server.dbDriver)
 	server.AddGame(reactionGame)
 }
 
@@ -114,7 +115,7 @@ func hearMessage(player *reactionGame.Player) {
 			// server.clientsReady += 1
 			// server.game.PlayerReady += 1
 			server.reactionGames[0].PlayersReady += 1
-            fmt.Println("player: ")
+			fmt.Println("player: ")
 			fmt.Println(player)
 			fmt.Println(server.reactionGames[0].PlayersReady)
 		} else {
