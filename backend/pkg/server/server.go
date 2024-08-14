@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"gorm.io/gorm"
@@ -11,6 +12,11 @@ import (
 	"github.com/juanpabloinformatica/game_platform/pkg/database"
 	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
+
+type UserChart struct {
+	X []time.Time `json:"x"`
+	Y []float32   `json:"y"`
+}
 
 type Client struct {
 	id         int

@@ -245,9 +245,8 @@ table {
   width: 100px;
 }
 
-/* backgroundColor: "crimson", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" */
 .userHomeWrapper {
-  background-color: green;
+  /* background-color: green; */
 }
 
 /*games styles*/

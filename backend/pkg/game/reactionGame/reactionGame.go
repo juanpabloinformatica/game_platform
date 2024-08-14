@@ -276,10 +276,11 @@ func (reactionGame *ReactionGame) HandleGame() {
 	reactionGame.initGame()
 	reactionGame.setResult()
 	reactionGame.finishGame()
+	// It has to write and the reset
+	reactionGame.writeResultToDatabase()
 	reactionGame.resetGame()
 	// reactionGame.sendResultToServer()
 	// now as private and in reactionGame object i will use it but
 	// the parameters should be passed
-	reactionGame.writeResultToDatabase()
 	reactionGame.HandleGame()
 }

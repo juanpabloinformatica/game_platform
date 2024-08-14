@@ -1,18 +1,24 @@
 package server
 
 import (
-	"net/http"
+	// "net/http"
+
+	"github.com/gorilla/mux"
 )
 
-func setMux(mux *http.ServeMux) {
+func setMux(mux *mux.Router) {
 	mux.HandleFunc("/", handler)
 	mux.HandleFunc("/ws", handlerWs)
 	mux.HandleFunc("/joinreactiongame", handleJoinReactionGame)
 	mux.HandleFunc("/reactiongameconfig", handleReactionGameConfig)
+	// mux.HandleFunc("/userchart/{playerId}/{ballSpeed}/{ballNumber}",handleUserChart)
+	mux.HandleFunc("/userchart",handleUserChart).Methods("GET")
 }
 
-func NewMux() *http.ServeMux {
-	mux := http.NewServeMux()
-	setMux(mux)
-	return mux
+func NewMux() *mux.Router {
+	// mux := http.NewServeMux()
+
+	r := mux.NewRouter()
+	setMux(r)
+	return r
 }
