@@ -1,4 +1,15 @@
 .userHomeWrapper {
     @extend .wrapperCenter;
-    background-color: green;
+    /* background-color: green; */
+}
+.formUserHome{
+    @extend .form;
+    min-height:200px;
+    /* background-color:red; */
+}
+
+.graphWrapper{
+    width: "700px";
+    height: "700px";
+    /* border:1px solid black; */
 }

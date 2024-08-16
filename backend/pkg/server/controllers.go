@@ -1,15 +1,18 @@
 package server
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/websocket"
 
+	"github.com/juanpabloinformatica/game_platform/pkg/database"
 	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
 
@@ -40,7 +43,8 @@ func handleReactionGameConfig(writter http.ResponseWriter, request *http.Request
 	playerId := playGame.PlayerId
 	roomId := playGame.RoomId
 	reactionGameConfig := playGame.GameConfig
-	reactionGame := reactionGame.NewReactionGame(modality, playerId, reactionGameConfig, roomId)
+	// This database driver has to be better handle, maybe check connection pool or something to improve it
+	reactionGame := reactionGame.NewReactionGame(modality, playerId, reactionGameConfig, roomId, server.dbDriver)
 	server.AddGame(reactionGame)
 }
 
@@ -69,6 +73,86 @@ func handleJoinReactionGame(writter http.ResponseWriter, request *http.Request) 
 	} else {
 		fmt.Println("this player is not in the same created room")
 	}
+}
+
+func getPorcentages(ballNumber int,resultsPerDay map[time.Time][]int)map[time.Time]float32{
+    fmt.Println("i get in here")
+    resultsPorcentage:= make(map[time.Time]float32)
+     // ballNumber = 100 
+     // ballClicked = %
+     // %*ballNumber = ballClicked*100
+     // % = ballClicked*100 / ballNumber
+     for key,value := range resultsPerDay{
+         fmt.Println(key,"value is ",value)
+         resultsPorcentage[key]=0
+         for _,valueT := range value{
+             fmt.Println(valueT)
+             resultsPorcentage[key]+=float32(valueT)
+         }
+         fmt.Println("printing key and date ")
+         fmt.Println(key)
+         fmt.Println("========printing key and date======= ")
+         resultsPorcentage[key]=(resultsPorcentage[key] / float32(len(resultsPerDay[key])))
+         resultsPorcentage[key]=resultsPorcentage[key]*100/float32(ballNumber)
+         fmt.Println(resultsPorcentage[key])
+     }
+     // fmt.Println(len(resultsPorcentage))
+     // for key,value := range resultsPorcentage{
+     //     fmt.Println(key, "value is ",value)
+     // }
+     return resultsPorcentage
+}
+
+func handleSelectedResults(ballNumber int,rows*sql.Rows) map[time.Time]float32{
+    resultsPerDay:= make(map[time.Time][]int)
+	defer rows.Close()
+	for rows.Next() {
+		fmt.Println("here insdie")
+		var r database.Results
+		server.dbDriver.ScanRows(rows, &r)
+        fmt.Println("day format to discover")
+        fmt.Println(resultsPerDay[r.Day])
+        fmt.Println("======day format to discover=====")
+        resultsPerDay[r.Day] = append(resultsPerDay[r.Day],r.BallsClicked)
+		fmt.Printf("%+v\n", r)
+	}
+    porcentages:= getPorcentages(ballNumber,resultsPerDay)
+    return porcentages
+
+}
+
+func handleUserChart(writter http.ResponseWriter, request *http.Request) {
+	// params := mux.Vars(request)
+    // getParams()
+    // get params
+    writter.Header().Add("Access-Control-Allow-Origin", "*")
+	playerId, err := strconv.Atoi(request.URL.Query().Get("playerId"))
+	ballSpeed, err := strconv.ParseFloat(request.URL.Query().Get("ballSpeed"), 32)
+	ballNumber, err := strconv.Atoi(request.URL.Query().Get("ballNumber"))
+	if err != nil {
+		panic(err.Error())
+	}
+
+	results := make([]*database.Results, 0, 0)
+	result := server.dbDriver.Where("userId = ? AND ballSpeed = ? AND ballNumber = ?", playerId, ballSpeed, ballNumber).Order("day").Find(&results)
+    rows, err:= result.Rows()
+    if err!=nil{
+        panic(err.Error())
+    }
+    porcentages:= handleSelectedResults(ballNumber,rows)
+    jsonString,err := json.Marshal(porcentages)
+    fmt.Println(jsonString)
+    fmt.Fprintf(writter,string(jsonString))
+	// fmt.Printf("%+v\n", result.RowsAffected)
+	// rows, err := result.Rows()
+	// defer rows.Close()
+	// for rows.Next() {
+	// 	fmt.Println("here insdie")
+	// 	var r database.Results
+	// 	server.dbDriver.ScanRows(rows, &r)
+	// 	fmt.Printf("%+v\n", r)
+	// }
+	// fmt.Println("printing here")
 }
 
 func getClientId(request *http.Request) int {
@@ -114,13 +198,14 @@ func hearMessage(player *reactionGame.Player) {
 			// server.clientsReady += 1
 			// server.game.PlayerReady += 1
 			server.reactionGames[0].PlayersReady += 1
-            fmt.Println("player: ")
+			fmt.Println("player: ")
 			fmt.Println(player)
 			fmt.Println(server.reactionGames[0].PlayersReady)
 		} else {
 			// client.counter += 1
 			// server.reactionGames[0].Players[player.PlayerId].Counter += 1
 			player.Counter += 1
+			fmt.Println(player.Counter)
 		}
 	}
 }

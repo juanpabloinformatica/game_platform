@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"gorm.io/gorm"
 
+	"github.com/juanpabloinformatica/game_platform/pkg/database"
 	"github.com/juanpabloinformatica/game_platform/pkg/game"
 )
 
@@ -58,6 +60,7 @@ type ReactionGame struct {
 	PlayersReady int
 	// this will be improved consistenly
 	sameRoom bool
+	DbDriver *gorm.DB
 }
 
 func (reactionGame *ReactionGame) generateRoomId() int {
@@ -97,11 +100,12 @@ func (reactionGame *ReactionGame) SetPlayerConnection(playerId int, connection *
 	fmt.Printf("%+v\n", reactionGame.Players[playerId])
 }
 
-func NewReactionGame(gameModality bool, playerId int, gameConfig *GameConfig, roomId int) *ReactionGame {
+func NewReactionGame(gameModality bool, playerId int, gameConfig *GameConfig, roomId int, dbDriver *gorm.DB) *ReactionGame {
 	reactionGame := &ReactionGame{
 		GameModality: gameModality,
 		Players:      make(map[int]*Player),
 		GameConfig:   gameConfig,
+		DbDriver:     dbDriver,
 	}
 	// this has to be better done
 	player := NewPlayer(playerId)
@@ -235,6 +239,25 @@ func (reactionGame *ReactionGame) readyToPlay() {
 	}
 }
 
+func (reactionGame *ReactionGame) writeResultToDatabase() {
+	// reactionGame.DbDriver
+	// result := &database.Results{
+	//
+	//    }
+	// dayString := time.Now().Format(database.TimeFormat)
+	for playerId, player := range reactionGame.Players {
+		result := &database.Results{
+			UserId:       playerId,
+			Day:          time.Now(),
+			BallNumber:   reactionGame.GameConfig.BallNumber,
+			BallSpeed:    reactionGame.GameConfig.BallSpeed,
+			BallsClicked: player.Counter,
+			GameType:     "reactiongame",
+		}
+		reactionGame.DbDriver.Create(result)
+	}
+}
+
 func (reactionGame *ReactionGame) HandleGame() {
 	fmt.Printf("%+v\n", reactionGame)
 	if reactionGame.GameModality {
@@ -253,6 +276,11 @@ func (reactionGame *ReactionGame) HandleGame() {
 	reactionGame.initGame()
 	reactionGame.setResult()
 	reactionGame.finishGame()
+	// It has to write and the reset
+	reactionGame.writeResultToDatabase()
 	reactionGame.resetGame()
+	// reactionGame.sendResultToServer()
+	// now as private and in reactionGame object i will use it but
+	// the parameters should be passed
 	reactionGame.HandleGame()
 }

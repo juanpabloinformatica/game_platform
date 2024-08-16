@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/websocket"
 
 	// "github.com/juanpabloinformatica/game_platform/pkg/game"
+//	"github.com/juanpabloinformatica/game_platform/pkg/database"
 	"github.com/juanpabloinformatica/game_platform/pkg/server"
 )
 
@@ -30,4 +31,5 @@ func main() {
 	// game.Init()
 	improvedServer := server.NewServer(capacity, httpServer, upgrader)
 	improvedServer.Run()
+    // database.Init()
 }

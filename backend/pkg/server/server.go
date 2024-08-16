@@ -4,11 +4,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
+	"gorm.io/gorm"
 
+	"github.com/juanpabloinformatica/game_platform/pkg/database"
 	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
+
+type UserChart struct {
+	X []time.Time `json:"x"`
+	Y []float32   `json:"y"`
+}
 
 type Client struct {
 	id         int
@@ -25,6 +33,7 @@ type (
 		// games      []*game.Game
 		// This should be an array of games, each game in the array could be different extending for game class
 		reactionGames []*reactionGame.ReactionGame
+		dbDriver      *gorm.DB
 	}
 )
 
@@ -62,6 +71,7 @@ func NewServer(capacity int, httpServer *http.Server, upgrader *websocket.Upgrad
 		upgrader:      upgrader,
 		clients:       make(map[int]*Client),
 		reactionGames: make([]*reactionGame.ReactionGame, 0, 0),
+		dbDriver:      database.NewDbDriver(),
 	}
 	server = newServer
 	return newServer
