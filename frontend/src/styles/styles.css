@@ -54,7 +54,7 @@ table {
 }
 
 /*predefined elements*/
-.form {
+.form, .formUserHome {
   min-width: 400px;
   min-height: 400px;
   display: flex;
@@ -63,10 +63,10 @@ table {
   gap: 5px;
   padding: 10px;
 }
-.form label {
+.form label, .formUserHome label {
   align-self: flex-start;
 }
-.form input {
+.form input, .formUserHome input {
   width: 100%;
   outline: none;
   border: 0px;
@@ -75,6 +75,7 @@ table {
   margin-bottom: 20px;
 }
 .wrapperCenter, .userHomeWrapper {
+  /* margin-top:100px; */
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -84,18 +85,18 @@ table {
   gap: 20px;
 }
 
-.submitButton, .gameButton, .form button {
+.submitButton, .gameButton, .form button, .formUserHome button {
   padding: 5px;
   background-color: grey;
   border-radius: 10px 5px;
 }
-.submitButton:hover, .gameButton:hover, .form button:hover {
+.submitButton:hover, .gameButton:hover, .form button:hover, .formUserHome button:hover {
   background-color: white;
 }
 
 /*components styles*/
 .navbarWrapper {
-  position: fixed;
+  /* position: fixed; */
   width: 100vw;
   height: 50px;
   display: flex;
@@ -104,6 +105,7 @@ table {
   gap: 20px;
   align-items: center;
   background-color: black;
+  margin-bottom: 50px;
 }
 
 .navLink {
@@ -154,7 +156,7 @@ table {
 }
 
 .navbarWrapper {
-  position: fixed;
+  /* position: fixed; */
   width: 100vw;
   height: 50px;
   display: flex;
@@ -163,6 +165,7 @@ table {
   gap: 20px;
   align-items: center;
   background-color: black;
+  margin-bottom: 50px;
 }
 
 .navLink {
@@ -249,14 +252,25 @@ table {
   /* background-color: green; */
 }
 
+.formUserHome {
+  min-height: 200px;
+  /* background-color:red; */
+}
+
+.graphWrapper {
+  width: "700px";
+  height: "700px";
+  /* border:1px solid black; */
+}
+
 /*games styles*/
-.submitButton, .form button, .gameButton {
+.submitButton, .form button, .formUserHome button, .gameButton {
   padding: 5px;
   background-color: grey;
   border-radius: 10px 5px;
 }
 
-.submitButton:hover, .form button:hover, .gameButton:hover {
+.submitButton:hover, .form button:hover, .formUserHome button:hover, .gameButton:hover {
   background-color: white;
 }
 

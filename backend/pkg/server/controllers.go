@@ -89,6 +89,9 @@ func getPorcentages(ballNumber int,resultsPerDay map[time.Time][]int)map[time.Ti
              fmt.Println(valueT)
              resultsPorcentage[key]+=float32(valueT)
          }
+         fmt.Println("printing key and date ")
+         fmt.Println(key)
+         fmt.Println("========printing key and date======= ")
          resultsPorcentage[key]=(resultsPorcentage[key] / float32(len(resultsPerDay[key])))
          resultsPorcentage[key]=resultsPorcentage[key]*100/float32(ballNumber)
          fmt.Println(resultsPorcentage[key])
@@ -107,6 +110,9 @@ func handleSelectedResults(ballNumber int,rows*sql.Rows) map[time.Time]float32{
 		fmt.Println("here insdie")
 		var r database.Results
 		server.dbDriver.ScanRows(rows, &r)
+        fmt.Println("day format to discover")
+        fmt.Println(resultsPerDay[r.Day])
+        fmt.Println("======day format to discover=====")
         resultsPerDay[r.Day] = append(resultsPerDay[r.Day],r.BallsClicked)
 		fmt.Printf("%+v\n", r)
 	}

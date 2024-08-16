@@ -250,7 +250,7 @@ func (reactionGame *ReactionGame) writeResultToDatabase() {
 			UserId:       playerId,
 			Day:          time.Now(),
 			BallNumber:   reactionGame.GameConfig.BallNumber,
-			BallSpeed:    int(reactionGame.GameConfig.BallSpeed),
+			BallSpeed:    reactionGame.GameConfig.BallSpeed,
 			BallsClicked: player.Counter,
 			GameType:     "reactiongame",
 		}

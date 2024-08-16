@@ -24,7 +24,7 @@ type Results struct {
 	// Day        GamePlatformTime `gorm:"column:day"`
 	Day          time.Time `sql:"type:timestamp without time zone"`
 	BallNumber   int       `gorm:"column:ballNumber"`
-	BallSpeed    int       `gorm:"column:ballSpeed"`
+	BallSpeed    float32       `gorm:"column:ballSpeed"`
 	BallsClicked int       `gorm:"column:ballsClicked"`
 	GameType     string    `gorm:"column:gameType"`
 	// CreatedAt  time.Time `gorm:"autoCreateTime:false"`

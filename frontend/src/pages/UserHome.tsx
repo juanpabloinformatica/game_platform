@@ -1,81 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CustomNavbar from "../components/Navbar";
 import "../styles/styles.css"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Scatter } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Scatter, ScatterChart } from 'recharts';
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { axiosGameCLient } from "../axios/axiosClients";
 import moment from "moment-timezone";
-
-//Perfect so now, what we
-
-const data = [
-    {
-        name: 'Page A',
-        // uv: 4000,
-        // pv: 2400,
-        // amt: 2400,
-    },
-    {
-        name: 'Page B',
-        // uv: 3000,
-        // pv: 1398,
-        // amt: 2210,
-    },
-    {
-        name: 'Page C',
-        // uv: 2000,
-        // pv: 9800,
-        // amt: 2290,
-    },
-    {
-        name: 'Page D',
-        // uv: 2780,
-        // pv: 3908,
-        // amt: 2000,
-    },
-    {
-        name: 'Page E',
-        // uv: 1890,
-        // pv: 4800,
-        // amt: 2181,
-    },
-    {
-        name: 'Page F',
-        // uv: 2390,
-        // pv: 3800,
-        // amt: 2500,
-    },
-    {
-        name: 'Page G',
-        // uv: 3490,
-        // pv: 4300,
-        // amt: 2100,
-    },
-];
-// const data = [
-//
-//     {
-//         name: `2024-08-09`
-//     },
-//     {
-//
-//     },
-// ]
-
+import { getUserChartData } from "../services/pages/userHome/userHomeServices";
 function buildListParsedDictionary(dictionary: any) {
-    console.log("here")
     console.log(dictionary)
     let parsedDictionay = []
     for (const key in dictionary) {
-        console.log('heloo')
-        console.log(moment(key.toLocaleString()).format("YYYY-MM-DD"))
         let porcentage = dictionary[key]
-        let name = moment(key.toLocaleString()).format("YYYY-MM-DD")
+        let name = new Date(key).getTime()
         parsedDictionay.push({ name: name, porcentage: porcentage })
-        // console.log(`${key}: ${dictionary[key]}`);
     }
-    // console.log(parsedDictionay)
     return parsedDictionay
 }
 function UserHome() {
@@ -83,36 +21,45 @@ function UserHome() {
     const [inputBallSpeed, setInputBallSpeed] = useState(0.5)
     const [inputBallNumber, setInputBallNumber] = useState(10)
     const [diagramData, setDiagramData] = useState([])
-
     const fetching = async () => {
         try {
-            const response = await axiosGameCLient.get(`/userchart?playerId=${playerId}&ballSpeed=${inputBallSpeed}&ballNumber=${inputBallNumber}`)
-            if (response) {
-                let data = response.data
-                let parsedDictionary = buildListParsedDictionary(data)
-                console.log(parsedDictionary)
-                setDiagramData([...parsedDictionary])
-
+            let userChartData = null
+            if (typeof playerId == "number") {
+                userChartData = await getUserChartData(playerId, inputBallSpeed, inputBallNumber)
+            }
+            if (userChartData != null) {
+                let parsedUserChartData = buildListParsedDictionary(userChartData)
+                setDiagramData([...parsedUserChartData])
             }
         } catch (error) {
             console.log(error)
         }
     }
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.MouseEvent) => {
         e.preventDefault()
         await fetching()
 
     }
-    const formatXAxis = (tickItem) => {
-        // console.log(moment(tickItem).format("YYYY-MM-DD")
+    const formatXAxis = (tickItem: Date) => {
         return moment(tickItem).format("YYYY-MM-DD")
     }
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="custom-tooltip">
+                    <p className="label">{`day : ${moment(new Date(payload[0].value)).format("YYYY-MM-DD")}`}</p>
+                    <p className="label">{`porcentage : ${payload[1].value}`}</p>
+                </div>
+            );
+        }
+
+        return null;
+    };
     return (<>
         <CustomNavbar />
         <div className="userHomeWrapper">
-            hola tu pronto pondre tu nombre
             <div className="buttonWrapper">
-                <form onSubmit={handleSubmit} className="form">
+                <form onSubmit={handleSubmit} className="formUserHome">
                     <label>BallSpeed</label>
                     <input
                         type="number" step="0.1" min="0"
@@ -133,7 +80,7 @@ function UserHome() {
             </div>
             <div style={graphWrapperStyle}>
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
+                    <ScatterChart
                         width={500}
                         height={300}
                         data={diagramData}
@@ -145,21 +92,33 @@ function UserHome() {
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" type="number" domain={['2024-08-09', '2024-08-13']} tickFormatter={formatXAxis} />
-                        <YAxis type="number" domain={[0, 100]} />
-                        <Tooltip />
+                        <YAxis dataKey='porcentage' name="Porcentage" type="number" domain={[0, 100]} />
+                        <XAxis
+                            dataKey="name"
+                            domain={['auto', 'auto']}
+                            tickFormatter={formatXAxis}
+                            type="number"
+                        />
+                        <Tooltip content={<CustomTooltip />} />
+
                         <Legend />
-                        // <Line type="monotone" dataKey="porcentage" stroke="#8884d8" activeDot={{ r: 8 }} />
-                        <Scatter data={diagramData} line={{ stroke: 'red', strokeWidth: 2 }} />
-                    </LineChart>
+                        <Scatter
+                            data={diagramData}
+                            line={{ stroke: '#eee' }}
+                            lineJointType='monotoneX'
+                            lineType='joint'
+                            name='porcentage'
+                        />
+                    </ScatterChart>
                 </ResponsiveContainer>
             </div>
         </div>
     </>)
 }
 const graphWrapperStyle = {
-    width: "700px",
-    height: "700px",
+    width: "600px",
+    height: "600px",
     // backgroundColor: "red",
 }
+
 export default UserHome;
