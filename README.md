@@ -1,71 +1,58 @@
 # Game Platform
+This is an application that offers multiple games, each game offered can be played alone or with multiple players, besides that it allows you to keep track of your progress. 
+What makes this special, is that the game server is thought to handle multiple threads and really having a multiplayer game experience in real time. Golang concurrency fits perfect to this pourpose.
 
-# Multiplayer Reaction Game
+## Reaction Game
+This is one of the games developed, this game consist in clicking as much as you can a ball that appears in a canvas,
+The ball speed and the number of balls that appears can be set it by they user.
+### Single player
+Click one player button, for one player modality, once you have fill the ballNumber and the ballSpeed you are ready to play.
+### Two players
+#### Creator player
+There will be a player that will create the game, this one will set the ballNumber, the ballSpeed and will push the create button, is this player that has to share the room id he set.
+#### Normal player
+Once received the roomId just fill it and click join. ignore the ballNumber and ballSpeed, they wont be considered. 
 
-## Overview
+Once both player see the canvas is time to check push the play button.
 
-The Reaction Game is an interactive web-based game designed to test and improve your reaction time. The objective of the game is to click on the balls that appear on the screen as quickly as possible. It must need 2 players in order to be played. Compete with your best friend to see how has better reaction.
+If you want to see your progress, you will have to be logged in and then in the home page, this will show you 
+the ballNumber and the ballSpeed input fields, needed because you will see the progress that you have had depending the number of balls and ballSpeed you pick. The graph show the porcentage of effectivity for each day, so each bullet point in the graphic is an average of the games played each day.
 
-## Features
 
-<!-- - **Customizable Ball Appearance Speed**: Set how fast the balls will appear on the screen. -->
-<!-- - **Adjustable Number of Balls**: Choose the total number of balls that will be displayed during the game. -->
+### Demo
+https://github.com/user-attachments/assets/79a25b3b-5a67-4bfa-9fa7-d65073a121e9
 
-- **Score Tracking**: who wins with the number of correct clicks
-- **User-Friendly Interface**: Simple and intuitive interface for an enjoyable user experience.
 
-## How to Play
-
-1. **Setup**:
-
-   - Open the game in your web browser. (player 1)
-   - Open the game in your web browser. (player 2)
-
-2. **Playing the Game**:
-
-   - Once you start the game, balls will begin to appear on the canvas at the specified interval.
-   - Click on each ball as quickly as you can to score points.
-   - The game will keep track of the number of balls you click successfully.
-
-3. **End of Game**:
-   - The game ends when the total number of balls have been displayed.
-   - The winner will be shown
-4. **Playing agame**:
-   - touch the play button again both players (keep the same order at the moment of touching the button !)
 
 ## Installation
+1 => Clone the git repository
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/reaction-game.git
-   ```
-2. Navigate to the project directory
-   ```bash
-   cd reaction-game
-   ```
-3. Navigate to the project backend
-   ```bash
-   cd backend
-   ```
-4. execute the command
-   ```bash
-   go run ./cmd/main.go
-   ```
-5. Open another terminal
+2 => Run all the microservices of the project
 
-6. Navigate to the project frontend
-   ```bash
-   cd backend
+   => database: 
    ```
-7. Execute the following command
-
-   ```bash
+   # Once in the root of the project
+   cd ./
+   docker compose up --build #if first time
+   docker compose up # After the first time.
+   ```
+   => auth: 
+   ```
+   # Once in the root of the project
+   cd ./auth
    npm run dev
-
    ```
 
-8. Open a webbrowser and redirect to http://localhost:5173 (player_1)
-9. Open a webbrowser and redirect to http://localhost:5173 (player_2)
-
-## Demo
-[video(1).webm](https://github.com/juanpabloinformatica/game_platform/assets/64615774/e06ad2bc-f478-4d9c-9876-09b77f7d30e7)
+   => backend: 
+   ```
+   # Once in the root of the project
+   cd ./backend
+   go run cmd/main.go
+   ```
+   => frontend: 
+   ```
+   # Once in the root of the project
+   cd ./frontend
+   npm run dev
+   ```
+Is still local by this moment, proximately will be wrapped using kubernetes.
