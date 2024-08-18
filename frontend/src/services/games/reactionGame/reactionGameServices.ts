@@ -26,6 +26,7 @@ async function sendPlayReactionGame(
     roomId: number,
 ) {
     try {
+        console.log(axiosGameCLient.getUri())
         const body = JSON.stringify({
             gameConfig: gameConfig,
             playerId: playerId,

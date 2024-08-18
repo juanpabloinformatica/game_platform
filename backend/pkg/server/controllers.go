@@ -16,9 +16,6 @@ import (
 	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
 
-func handler(writter http.ResponseWriter, request *http.Request) {
-	fmt.Fprintf(writter, "time to play", request.URL.Path[1:])
-}
 
 func handlerWs(writter http.ResponseWriter, request *http.Request) {
 	//   upgrade server
@@ -168,16 +165,15 @@ func getClientId(request *http.Request) int {
 
 // just for initializing the game once
 var count = 0
-
 func handleSocketConnection(conn *websocket.Conn, writter http.ResponseWriter, request *http.Request) {
-	fmt.Println("hellloooooo in handleConnection")
 	clientId := getClientId(request)
-	client := server.newClient(conn, clientId)
+	client := server.newClient(conn)
 	server.addClient(client)
 	// how to handle multiple connections to different games
 	fmt.Printf("%+v\n", server.reactionGames[0].Players[clientId])
 	server.reactionGames[0].SetPlayerConnection(clientId, conn)
 	go hearMessage(server.reactionGames[0].Players[clientId])
+    // wait group or something, need to think this part well
 	if count == 0 {
 		server.reactionGames[0].HandleGame()
 		count++
@@ -195,15 +191,8 @@ func hearMessage(player *reactionGame.Player) {
 		}
 		fmt.Println(string(p))
 		if string(p) == "ready" {
-			// server.clientsReady += 1
-			// server.game.PlayerReady += 1
 			server.reactionGames[0].PlayersReady += 1
-			fmt.Println("player: ")
-			fmt.Println(player)
-			fmt.Println(server.reactionGames[0].PlayersReady)
 		} else {
-			// client.counter += 1
-			// server.reactionGames[0].Players[player.PlayerId].Counter += 1
 			player.Counter += 1
 			fmt.Println(player.Counter)
 		}

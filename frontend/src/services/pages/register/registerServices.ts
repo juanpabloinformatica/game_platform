@@ -6,6 +6,7 @@ async function sendRegistration(
     confirmPassword: string,
 ) {
     if (username != "" && password != "" && confirmPassword != "") {
+        console.log(axiosAuthClient.getUri())
         try {
             const response = await axiosAuthClient.post(
                 "/register",

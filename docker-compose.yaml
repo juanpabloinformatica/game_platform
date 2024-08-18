@@ -20,27 +20,27 @@ services:
       - "3306:3306"
     # volumes:
     #   - ./database/data:/var/lib/mysql
-  # auth_backend:
-  #   image: authbackend:latest
-  #   container_name: authbackend_container
-  #   build:
-  #     context: ${PWD}
-  #     dockerfile: ./auth_backend/Dockerfile
-  #   depends_on:
-  #     database:
-  #       condition: service_healthy
-  #   ports:
-  #     - 3000:3000
-  # website_frontend:
-  #   image: websitefrotend:latest
-  #   container_name: websitefrontend_container
-  #   build:
-  #     context: ${PWD}
-  #     dockerfile: ./website_frontend/Dockerfile
-  #   # depends_on:
-  #   #   - auth_backend
-  #   ports:
-  #     - 5173:5173
+  auth:
+    image: auth:latest
+    container_name: auth_container
+    build:
+      context: ${PWD}
+      dockerfile: ./auth/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+  frontend:
+    image: frotend:latest
+    container_name: frontend_container
+    build:
+      context: ${PWD}
+      dockerfile: ./frontend/Dockerfile
+    depends_on:
+      - auth
+    ports:
+      - 5173:5173
 #   game_backend:
 #   game_frontend:
 #

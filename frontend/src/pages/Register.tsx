@@ -31,14 +31,14 @@ function RegisgterForm() {
                 ></input>
                 <label>Password</label>
                 <input
-                    name="username"
+                    name="password"
                     type="text"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 ></input>
                 <label>Confirm password </label>
                 <input
-                    name="username"
+                    name="confirmPassword"
                     type="text"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}

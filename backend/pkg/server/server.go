@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/websocket"
 	"gorm.io/gorm"
@@ -12,11 +11,6 @@ import (
 	"github.com/juanpabloinformatica/game_platform/pkg/database"
 	"github.com/juanpabloinformatica/game_platform/pkg/game/reactionGame"
 )
-
-type UserChart struct {
-	X []time.Time `json:"x"`
-	Y []float32   `json:"y"`
-}
 
 type Client struct {
 	id         int
@@ -39,7 +33,7 @@ type (
 
 var server *Server
 
-func (server *Server) newClient(connection *websocket.Conn, clientId int) *Client {
+func (server *Server) newClient(connection *websocket.Conn) *Client {
 	return &Client{connection: connection}
 }
 
@@ -49,7 +43,7 @@ func (server *Server) addClient(client *Client) {
 
 func (server *Server) ShowClients() {
 	for clientId, client := range server.clients {
-		fmt.Printf("client with id: %s and connection %+v", clientId, client.connection)
+		fmt.Printf("client with id: %d and connection %+v", clientId, client.connection)
 	}
 }
 

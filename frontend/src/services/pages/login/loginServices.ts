@@ -3,6 +3,7 @@ import { axiosAuthClient } from "../../../axios/axiosClients";
 async function sendLogin(username: string, password: string) {
     if (username != "" && password != "") {
         console.log("here from using axios");
+        console.log(axiosAuthClient.getUri())
         try {
             const response = await axiosAuthClient.post(
                 "/login",

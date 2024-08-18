@@ -160,7 +160,7 @@ func (reactionGame *ReactionGame) sendToPlayers(message interface{}) {
 
 func (reactionGame *ReactionGame) ShowPlayers() {
 	for playerId, player := range reactionGame.Players {
-		fmt.Printf("client with id: %s and connection %+v", playerId, player.Connection)
+		fmt.Printf("client with id: %d and connection %+v", playerId, player.Connection)
 	}
 }
 
@@ -240,11 +240,6 @@ func (reactionGame *ReactionGame) readyToPlay() {
 }
 
 func (reactionGame *ReactionGame) writeResultToDatabase() {
-	// reactionGame.DbDriver
-	// result := &database.Results{
-	//
-	//    }
-	// dayString := time.Now().Format(database.TimeFormat)
 	for playerId, player := range reactionGame.Players {
 		result := &database.Results{
 			UserId:       playerId,
@@ -276,11 +271,7 @@ func (reactionGame *ReactionGame) HandleGame() {
 	reactionGame.initGame()
 	reactionGame.setResult()
 	reactionGame.finishGame()
-	// It has to write and the reset
 	reactionGame.writeResultToDatabase()
 	reactionGame.resetGame()
-	// reactionGame.sendResultToServer()
-	// now as private and in reactionGame object i will use it but
-	// the parameters should be passed
 	reactionGame.HandleGame()
 }
