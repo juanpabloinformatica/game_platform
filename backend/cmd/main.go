@@ -12,7 +12,7 @@ func main() {
 	capacity := 2
 	myMux := server.NewMux()
 	httpServer := &http.Server{
-		Addr:    ":7777",
+		Addr:    "frontend",
 		Handler: myMux,
 	}
 	upgrader := &websocket.Upgrader{
