@@ -151,7 +151,7 @@ func handleUserChart(writter http.ResponseWriter, request *http.Request) {
 	// }
 	// fmt.Println("printing here")
 }
-
+var countP = 0
 func getClientId(request *http.Request) int {
 	clientId, err := strconv.Atoi(request.URL.Query().Get("clientId"))
 	if err != nil {
@@ -160,7 +160,9 @@ func getClientId(request *http.Request) int {
 	fmt.Println("line [25]----- here the client id-----")
 	fmt.Println(clientId)
 	fmt.Println("----------")
-	return clientId
+    clientIdt := countP
+    countP++
+	return clientIdt
 }
 
 // just for initializing the game once
