@@ -11,6 +11,7 @@ import {
     useReactionGameToggleModalityButton
 } from "../hooks/pages/reactionGameConfig/ReactionGameConfigStates";
 import { initHttpUpgradeRequest, setSocketConnection } from "../games/utils";
+import { setUserSocket } from "../redux/features/games/reactionGame/reactionGameSlice";
 function ReactionGameConfig() {
     const { inputBallSpeed,
         setInputBallSpeed,

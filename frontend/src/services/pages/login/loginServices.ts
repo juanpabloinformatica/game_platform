@@ -1,4 +1,3 @@
-import axios from "axios";
 import { axiosAuthClient } from "../../../axios/axiosClients";
 
 async function sendLogin(username: string, password: string) {

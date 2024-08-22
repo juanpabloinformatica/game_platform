@@ -23,9 +23,9 @@ function initHttpUpgradeRequest(socketConnection: string): WebSocket | null {
 }
 function setSocketConnection(playerId: number) {
     // let id = generateId().toString();
-    // return "/wsbackend/ws" + "?" + "clientId" + "=" + "" + playerId;
+    return "ws://localhost:80/ws" + "?" + "clientId" + "=" + "" + playerId;
     console.log(playerId);
-    return "/wsbackend/ws";
+    // return "ws://localhost:80/ws";
 }
 export {
     randomInteger,

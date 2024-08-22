@@ -1,14 +1,16 @@
-FROM node:16.13.1
-
-WORKDIR /usr/src/app
-
-COPY ./frontend/package*.json ./
-# COPY nodemon.json ./
-COPY ./frontend/tsconfig.json ./
-
+FROM node:20-bookworm AS builder
+WORKDIR /home/app
+# EXPOSE 4500
+COPY ./frontend/package.json ./frontend/package-lock.json ./
 RUN npm i
-
-COPY ./frontend/ .
+COPY ./frontend ./
 RUN sed -i 's/false/true/g' ./src/variables.ts
 
-CMD npm run dev
+RUN npm run build
+RUN ls /home/app/dist
+
+FROM nginx
+EXPOSE 4500
+COPY ./frontend/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /home/app/dist /usr/share/nginx/html
+

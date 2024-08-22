@@ -23,11 +23,11 @@ const COOKIE_OPTIONS = {
     secure: true, // use with HTTPS only
 };
 const CORS_OPTIONS = {
-    origin: "http://0.0.0.0:5173",
+    origin: "http://0.0.0.0:4500",
     credentials: true,
 };
 const CORS_OPTIONS_DOCKER = {
-    origin: "http://frontend:5173",
+    origin: "http://frontend:4500",
     credentials: true,
 };
 export {
