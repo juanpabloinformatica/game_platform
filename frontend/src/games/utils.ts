@@ -9,10 +9,10 @@ function getMousePositionRelativeOnElement(element: HTMLElement) {
         console.log(getRelativeCoords(e));
     });
 }
-function generateId() {
-    let id = randomInteger(0, 10000);
-    return id;
-}
+// function generateId() {
+//     let id = randomInteger(0, 10000);
+//     return id;
+// }
 function initHttpUpgradeRequest(socketConnection: string): WebSocket | null {
     let socket: WebSocket | null = null;
     if (window["WebSocket"]) {

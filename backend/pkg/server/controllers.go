@@ -160,9 +160,10 @@ func getClientId(request *http.Request) int {
 	fmt.Println("line [25]----- here the client id-----")
 	fmt.Println(clientId)
 	fmt.Println("----------")
-    clientIdt := countP
-    countP++
-	return clientIdt
+    return clientId
+ //    clientIdt := countP
+ //    countP++
+	// return clientIdt
 }
 
 // just for initializing the game once
