@@ -1,5 +1,4 @@
 # Game Platform
-<<<<<<< HEAD
 This is an application that offers multiple games, each game offered can be played alone or with multiple players, besides that it allows you to keep track of your progress. 
 What makes this special, is that the game server is thought to handle multiple threads and really having a multiplayer game experience in real time. Golang concurrency fits perfect to this pourpose.
 
@@ -28,32 +27,15 @@ https://github.com/user-attachments/assets/79a25b3b-5a67-4bfa-9fa7-d65073a121e9
 ## Installation
 1 => Clone the git repository
 
-2 => Run all the microservices of the project
+2 => Once inside the project folder
+   => execute 
+   ```
+   # First time
+   docker compose up --build
+   # After first time
+   docker compse up
+   ```
+3 => open the a web browser in the following direction: http://localhost:80/
 
-   => database: 
-   ```
-   # Once in the root of the project
-   cd ./
-   docker compose up --build #if first time
-   docker compose up # After the first time.
-   ```
-   => auth: 
-   ```
-   # Once in the root of the project
-   cd ./auth
-   npm run dev
-   ```
-
-   => backend: 
-   ```
-   # Once in the root of the project
-   cd ./backend
-   go run cmd/main.go
-   ```
-   => frontend: 
-   ```
-   # Once in the root of the project
-   cd ./frontend
-   npm run dev
-   ```
-Is still local by this moment, proximately will be wrapped using kubernetes.
+4 => Now u can test the project.
+   
