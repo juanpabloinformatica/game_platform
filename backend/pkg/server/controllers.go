@@ -19,6 +19,7 @@ import (
 
 func handlerWs(writter http.ResponseWriter, request *http.Request) {
 	//   upgrade server
+    fmt.Println("===============================here===============================")
 	conn, err := server.upgrader.Upgrade(writter, request, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -127,6 +128,7 @@ func handleUserChart(writter http.ResponseWriter, request *http.Request) {
 	ballSpeed, err := strconv.ParseFloat(request.URL.Query().Get("ballSpeed"), 32)
 	ballNumber, err := strconv.Atoi(request.URL.Query().Get("ballNumber"))
 	if err != nil {
+        fmt.Println("here user chart")
 		panic(err.Error())
 	}
 
@@ -151,10 +153,12 @@ func handleUserChart(writter http.ResponseWriter, request *http.Request) {
 	// }
 	// fmt.Println("printing here")
 }
-var countP = 0
+// var countP = 1
 func getClientId(request *http.Request) int {
+    fmt.Println(request.URL)
 	clientId, err := strconv.Atoi(request.URL.Query().Get("clientId"))
 	if err != nil {
+        fmt.Println("here in client Id")
 		panic(err.Error())
 	}
 	fmt.Println("line [25]----- here the client id-----")
@@ -169,6 +173,9 @@ func getClientId(request *http.Request) int {
 // just for initializing the game once
 var count = 0
 func handleSocketConnection(conn *websocket.Conn, writter http.ResponseWriter, request *http.Request) {
+    fmt.Println("-----------------------------")
+    fmt.Println("i enter here helllooooooo")
+    fmt.Println("-----------------------------")
 	clientId := getClientId(request)
 	client := server.newClient(conn)
 	server.addClient(client)

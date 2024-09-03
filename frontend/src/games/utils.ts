@@ -31,7 +31,7 @@ export {
     randomInteger,
     getMousePositionRelativeOnElement,
     getRelativeCoords,
-    generateId,
+    // generateId,
     initHttpUpgradeRequest,
     setSocketConnection,
 };

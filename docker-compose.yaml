@@ -30,8 +30,6 @@ services:
       timeout: 5s
     ports:
       - "3306:3306"
-    # volumes:
-    #   - ./database/data:/var/lib/mysql
   auth:
     image: auth:latest
     container_name: auth_container
@@ -41,8 +39,6 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    # ports:
-    #   - 3000:3000
   frontend:
     image: frontend:latest
     container_name: frontend_container
@@ -51,7 +47,6 @@ services:
       dockerfile: ./frontend/Dockerfile
     depends_on:
       - auth
-
   backend:
     image: backend:latest
     container_name: backend_container
@@ -61,10 +56,3 @@ services:
     depends_on:
       database:
         condition: service_healthy
-
-
-    # ports:
-    #   - 5173:5173
-#   game_backend:
-#   game_frontend:
-#

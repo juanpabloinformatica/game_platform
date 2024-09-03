@@ -23,7 +23,7 @@ const COOKIE_OPTIONS = {
     secure: true, // use with HTTPS only
 };
 const CORS_OPTIONS = {
-    origin: "http://0.0.0.0:4500",
+    origin: "http://127.0.0.1:4500",
     credentials: true,
 };
 const CORS_OPTIONS_DOCKER = {

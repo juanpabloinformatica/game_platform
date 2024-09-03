@@ -7,6 +7,7 @@ import (
 
 func NewDbDriver() *gorm.DB {
 	dsn := "root:root@tcp(database:3306)/gamePlatform?charset=utf8mb4&parseTime=True&loc=Local"
+	// dsn := "root:root@tcp(127.0.0.1:3306)/gamePlatform?charset=utf8mb4&parseTime=True&loc=Local"
 	// dsn := "host=database user=root password=user dbname=gamePlatform port=3306 sslmode=disable"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

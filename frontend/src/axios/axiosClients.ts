@@ -8,6 +8,7 @@ import {
 } from "../variables";
 console.log("===========here docker============")
 console.log(DOCKER)
+console.log(AXIOS_AUTH_CLIENT_BASE_URL)
 console.log("===========end docker============")
 const axiosAuthClient = axios.create({
   baseURL: DOCKER

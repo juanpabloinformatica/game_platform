@@ -193,6 +193,7 @@ func (reactionGame *ReactionGame) initGame() {
 		circleMessage := &CircleMessage{
 			CircleInstance: circle,
 		}
+        fmt.Println(circleMessage)
 		reactionGame.sendToPlayers(circleMessage)
 		millisecond := int(reactionGame.GameConfig.BallSpeed * 1000)
 		time.Sleep(time.Duration(millisecond) * time.Millisecond)
@@ -262,6 +263,7 @@ func (reactionGame *ReactionGame) HandleGame() {
 			fmt.Println(len(reactionGame.Room.Players))
 		}
 	}
+    fmt.Println("before ready to play")
 	reactionGame.readyToPlay()
 	reactionGame.goodToPlay()
 	if reactionGame.GameConfig == nil {
