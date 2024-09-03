@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import router from "./routes";
 // import { CORS_OPTIONS, JWT_OPTIONS_MIDDLEWARE, PORT } from "../variables";
-import { CORS_OPTIONS, PORT } from "../variables";
+import { CORS_OPTIONS, CORS_OPTIONS_DOCKER, DOCKER, PORT } from "../variables";
 import "../database/database";
 import cookieParser from "cookie-parser";
 // import { jwt } from "express-jwt";
@@ -17,7 +17,7 @@ const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors(CORS_OPTIONS));
+app.use(cors(DOCKER ? CORS_OPTIONS_DOCKER : CORS_OPTIONS));
 // app.use(expressjwt(JWT_OPTIONS_MIDDLEWARE));
 
 // add routes

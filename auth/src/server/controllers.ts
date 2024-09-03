@@ -12,6 +12,7 @@ import { COOKIE_OPTIONS } from "../variables";
 async function addUser(req: express.Request, res: express.Response) {
     // console.log(req.body)
     const { username, password, confirmPassword } = req.body;
+    console.log(username,password,confirmPassword)
     try {
         const user = await User.findOne({ where: { username: username } });
         console.log(user);

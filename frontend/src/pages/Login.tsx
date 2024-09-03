@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { isAuthenticated, setUser } from '../redux/features/auth/authSlice';
 import useAcessState from '../hooks/pages/login/accessState';
-import { jwtDecode } from 'jwt-decode'
 import Footer from '../components/Footer';
 import { AppDispatch } from '../redux/store';
 import { sendLogin } from '../services/pages/login/loginServices';
+import { JwtPayload } from '../types';
+import { jwtDecode } from 'jwt-decode';
 
 function LoginForm() {
     const navigate = useNavigate()
@@ -19,7 +20,7 @@ function LoginForm() {
             const response = await sendLogin(username, password)
             if (response.accessToken) {
                 dispatch(isAuthenticated(true))
-                let decoded = jwtDecode(response.accessToken)
+                let decoded = jwtDecode<JwtPayload>(response.accessToken)
                 dispatch(setUser(decoded.userId))
                 navigate("/userhome")
             }
@@ -60,3 +61,5 @@ function LoginPage() {
     </>)
 }
 export default LoginPage;
+
+

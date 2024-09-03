@@ -15,14 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAccessToken = getAccessToken;
 exports.generateHashPassword = generateHashPassword;
 exports.checkPassword = checkPassword;
+exports.checkAccessToken = checkAccessToken;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const variables_1 = require("../variables");
 function getAccessToken(userId) {
     const accessToken = jsonwebtoken_1.default.sign({ userId: userId }, variables_1.JWT_PRIVATEKEY, {
+        algorithm: variables_1.JWT_ALGO,
         expiresIn: variables_1.JWT_EXPIRATIONTIME,
     });
     return accessToken;
+}
+function checkAccessToken(token) {
+    console.log(jsonwebtoken_1.default.verify(token, variables_1.JWT_PRIVATEKEY));
+    return jsonwebtoken_1.default.verify(token, variables_1.JWT_PRIVATEKEY);
 }
 function generateSalt() {
     return __awaiter(this, void 0, void 0, function* () {

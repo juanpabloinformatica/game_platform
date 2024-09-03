@@ -8,4 +8,6 @@ const controllers_1 = require("./controllers");
 const router = express_1.default.Router();
 router.post("/register", controllers_1.addUser);
 router.post("/login", controllers_1.login);
+router.post("/validateaccesstoken", controllers_1.validateToken);
+router.post("/generateaccesstoken", controllers_1.generateToken);
 exports.default = router;

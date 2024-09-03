@@ -1,4 +1,5 @@
 # Game Platform
+<<<<<<< HEAD
 This is an application that offers multiple games, each game offered can be played alone or with multiple players, besides that it allows you to keep track of your progress. 
 What makes this special, is that the game server is thought to handle multiple threads and really having a multiplayer game experience in real time. Golang concurrency fits perfect to this pourpose.
 

@@ -15,7 +15,7 @@ const variables_1 = require("../variables");
 const models_1 = require("./models");
 const sequelize_typescript_1 = require("sequelize-typescript");
 const sequelize = new sequelize_typescript_1.Sequelize({
-    host: variables_1.MYSQL_HOST,
+    host: variables_1.DOCKER ? variables_1.MYSQL_HOST_DOCKER : variables_1.MYSQL_HOST,
     port: variables_1.MYSQL_PORT,
     database: variables_1.MYSQL_DATABASE,
     dialect: variables_1.MYSQL_DIALECT,
@@ -23,6 +23,7 @@ const sequelize = new sequelize_typescript_1.Sequelize({
     password: variables_1.MYSQL_PASSWORD,
 });
 sequelize.addModels([models_1.User]);
+console.log(variables_1.DOCKER);
 const addUser = () => __awaiter(void 0, void 0, void 0, function* () {
     yield models_1.User.create({ username: "robin", password: "david" });
 });

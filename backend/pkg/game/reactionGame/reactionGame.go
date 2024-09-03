@@ -160,7 +160,7 @@ func (reactionGame *ReactionGame) sendToPlayers(message interface{}) {
 
 func (reactionGame *ReactionGame) ShowPlayers() {
 	for playerId, player := range reactionGame.Players {
-		fmt.Printf("client with id: %s and connection %+v", playerId, player.Connection)
+		fmt.Printf("client with id: %d and connection %+v", playerId, player.Connection)
 	}
 }
 
@@ -193,6 +193,7 @@ func (reactionGame *ReactionGame) initGame() {
 		circleMessage := &CircleMessage{
 			CircleInstance: circle,
 		}
+        fmt.Println(circleMessage)
 		reactionGame.sendToPlayers(circleMessage)
 		millisecond := int(reactionGame.GameConfig.BallSpeed * 1000)
 		time.Sleep(time.Duration(millisecond) * time.Millisecond)
@@ -240,11 +241,6 @@ func (reactionGame *ReactionGame) readyToPlay() {
 }
 
 func (reactionGame *ReactionGame) writeResultToDatabase() {
-	// reactionGame.DbDriver
-	// result := &database.Results{
-	//
-	//    }
-	// dayString := time.Now().Format(database.TimeFormat)
 	for playerId, player := range reactionGame.Players {
 		result := &database.Results{
 			UserId:       playerId,
@@ -267,6 +263,7 @@ func (reactionGame *ReactionGame) HandleGame() {
 			fmt.Println(len(reactionGame.Room.Players))
 		}
 	}
+    fmt.Println("before ready to play")
 	reactionGame.readyToPlay()
 	reactionGame.goodToPlay()
 	if reactionGame.GameConfig == nil {
@@ -276,11 +273,7 @@ func (reactionGame *ReactionGame) HandleGame() {
 	reactionGame.initGame()
 	reactionGame.setResult()
 	reactionGame.finishGame()
-	// It has to write and the reset
 	reactionGame.writeResultToDatabase()
 	reactionGame.resetGame()
-	// reactionGame.sendResultToServer()
-	// now as private and in reactionGame object i will use it but
-	// the parameters should be passed
 	reactionGame.HandleGame()
 }

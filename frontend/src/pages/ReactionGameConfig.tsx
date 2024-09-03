@@ -1,4 +1,4 @@
-import { setUserSocket } from "../redux/features/games/reactionGame/reactionGameSlice";
+
 import { useNavigate } from "react-router-dom";
 import { sendJoinReactionGame, sendPlayReactionGame } from "../services/games/reactionGame/reactionGameServices";
 import CustomNavbar from "../components/Navbar";
@@ -11,6 +11,7 @@ import {
     useReactionGameToggleModalityButton
 } from "../hooks/pages/reactionGameConfig/ReactionGameConfigStates";
 import { initHttpUpgradeRequest, setSocketConnection } from "../games/utils";
+import { setUserSocket } from "../redux/features/games/reactionGame/reactionGameSlice";
 function ReactionGameConfig() {
     const { inputBallSpeed,
         setInputBallSpeed,

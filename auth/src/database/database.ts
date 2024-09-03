@@ -1,16 +1,18 @@
 import {
+    DOCKER,
     MYSQL_HOST,
     MYSQL_DATABASE,
     MYSQL_DIALECT,
     MYSQL_PASSWORD,
     MYSQL_PORT,
     MYSQL_USERNAME,
+    MYSQL_HOST_DOCKER,
 } from "../variables";
 import { User } from "./models";
 import { Sequelize } from "sequelize-typescript";
 
 const sequelize = new Sequelize({
-    host: MYSQL_HOST,
+    host: DOCKER ? MYSQL_HOST_DOCKER : MYSQL_HOST,
     port: MYSQL_PORT,
     database: MYSQL_DATABASE,
     dialect: MYSQL_DIALECT,
@@ -18,6 +20,7 @@ const sequelize = new Sequelize({
     password: MYSQL_PASSWORD,
 });
 sequelize.addModels([User]);
+console.log(DOCKER)
 const addUser = async () => {
     await User.create({ username: "robin", password: "david" });
 };
